@@ -1,2 +1,2 @@
-# musescore-plugin-utils
-A collection of useful files for Musescore plugins
+# Musescore Plugin Utils
+A collection of useful files for Musescore plugins.
