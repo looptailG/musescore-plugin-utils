@@ -1,5 +1,5 @@
 /*
-	A collection of functions for manipulating strings.
+	A collection of functions and consultants about tuning.
 	Copyright (C) 2024 Alessandro Culatti
 
 	This program is free software: you can redistribute it and/or modify
