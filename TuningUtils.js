@@ -16,7 +16,7 @@
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const VERSION = "1.0.0";
+const VERSION = "1.0.1";
 
 // Size in cents of a justly tuned perfect fifth.
 const JUST_FIFTH = 1200.0 * Math.log2(3 / 2);
@@ -88,7 +88,7 @@ function circleOfFifthsTuningOffset(note, fifthDeviation, referenceNote = "A")
 			noteLetter = "B";
 			break;
 	}
-	var tuningOffset = -TuningUtils.circleOfFifthsDistance(noteLetter, referenceNote) * fifthDeviation;
+	var tuningOffset = -circleOfFifthsDistance(noteLetter, referenceNote) * fifthDeviation;
 	
 	// Add the tuning offset due to the accidental.  Each semitone adds 7 fifth
 	// deviations to the note's tuning, because we have to move 7 steps in the
