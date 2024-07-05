@@ -700,3 +700,440 @@ const ACCIDENTAL_DATA = {
 		"DEFAULT_OFFSET": 113.7,
 	},
 };
+
+/**
+ * Return the name of the input note's accidental.
+ */
+function getAccidentalName(note)
+{
+	// Casting accidentalType to string is necessary to obtain the number
+	// corresponding to the enum value.  Parsing it as int is needed to properly
+	// compare it with the enum values in a switch statement.
+	var accidentalType = parseInt("" + note.accidentalType);
+	// TODO: Check if it's still necessary for MS 4.4 and later.
+	// In Musescore3 the accidentalType property is a signed integer, while the
+	// Accidentals enum values are always positive.  If it's negative, convert
+	// it to an unsigned 8 bit integer by shifting it by 256.
+	if (accidentalType < 0)
+	{
+		accidentalType += 256;
+	}
+	if ((accidentalType < 0) || (accidentalType >= 256))
+	{
+		throw "Out of bound accidental type: " + accidentalType;
+	}
+	
+	switch (accidentalType)
+	{
+		case Accidental.NONE:
+			return "NONE";
+
+		case Accidental.FLAT:
+			return "FLAT";
+
+		case Accidental.NATURAL:
+			return "NATURAL";
+
+		case Accidental.SHARP:
+			return "SHARP";
+
+		case Accidental.SHARP2:
+			return "SHARP2";
+
+		case Accidental.FLAT2:
+			return "FLAT2";
+
+		case Accidental.SHARP3:
+			return "SHARP3";
+
+		case Accidental.FLAT3:
+			return "FLAT3";
+
+		case Accidental.NATURAL_FLAT:
+			return "NATURAL_FLAT";
+
+		case Accidental.NATURAL_SHARP:
+			return "NATURAL_SHARP";
+
+		case Accidental.SHARP_SHARP:
+			return "SHARP_SHARP";
+
+		case Accidental.FLAT_ARROW_UP:
+			return "FLAT_ARROW_UP";
+
+		case Accidental.FLAT_ARROW_DOWN:
+			return "FLAT_ARROW_DOWN";
+
+		case Accidental.NATURAL_ARROW_UP:
+			return "NATURAL_ARROW_UP";
+
+		case Accidental.NATURAL_ARROW_DOWN:
+			return "NATURAL_ARROW_DOWN";
+
+		case Accidental.SHARP_ARROW_UP:
+			return "SHARP_ARROW_UP";
+
+		case Accidental.SHARP_ARROW_DOWN:
+			return "SHARP_ARROW_DOWN";
+
+		case Accidental.SHARP2_ARROW_UP:
+			return "SHARP2_ARROW_UP";
+
+		case Accidental.SHARP2_ARROW_DOWN:
+			return "SHARP2_ARROW_DOWN";
+
+		case Accidental.FLAT2_ARROW_UP:
+			return "FLAT2_ARROW_UP";
+
+		case Accidental.FLAT2_ARROW_DOWN:
+			return "FLAT2_ARROW_DOWN";
+
+		case Accidental.ARROW_DOWN:
+			return "ARROW_DOWN";
+
+		case Accidental.ARROW_UP:
+			return "ARROW_UP";
+
+		case Accidental.MIRRORED_FLAT:
+			return "MIRRORED_FLAT";
+
+		case Accidental.MIRRORED_FLAT2:
+			return "MIRRORED_FLAT2";
+
+		case Accidental.SHARP_SLASH:
+			return "SHARP_SLASH";
+
+		case Accidental.SHARP_SLASH4:
+			return "SHARP_SLASH4";
+
+		case Accidental.FLAT_SLASH2:
+			return "FLAT_SLASH2";
+
+		case Accidental.FLAT_SLASH:
+			return "FLAT_SLASH";
+
+		case Accidental.SHARP_SLASH3:
+			return "SHARP_SLASH3";
+
+		case Accidental.SHARP_SLASH2:
+			return "SHARP_SLASH2";
+
+		case Accidental.DOUBLE_FLAT_ONE_ARROW_DOWN:
+			return "DOUBLE_FLAT_ONE_ARROW_DOWN";
+
+		case Accidental.FLAT_ONE_ARROW_DOWN:
+			return "FLAT_ONE_ARROW_DOWN";
+
+		case Accidental.NATURAL_ONE_ARROW_DOWN:
+			return "NATURAL_ONE_ARROW_DOWN";
+
+		case Accidental.SHARP_ONE_ARROW_DOWN:
+			return "SHARP_ONE_ARROW_DOWN";
+
+		case Accidental.DOUBLE_SHARP_ONE_ARROW_DOWN:
+			return "DOUBLE_SHARP_ONE_ARROW_DOWN";
+
+		case Accidental.DOUBLE_FLAT_ONE_ARROW_UP:
+			return "DOUBLE_FLAT_ONE_ARROW_UP";
+
+		case Accidental.FLAT_ONE_ARROW_UP:
+			return "FLAT_ONE_ARROW_UP";
+
+		case Accidental.NATURAL_ONE_ARROW_UP:
+			return "NATURAL_ONE_ARROW_UP";
+
+		case Accidental.SHARP_ONE_ARROW_UP:
+			return "SHARP_ONE_ARROW_UP";
+
+		case Accidental.DOUBLE_SHARP_ONE_ARROW_UP:
+			return "DOUBLE_SHARP_ONE_ARROW_UP";
+
+		case Accidental.DOUBLE_FLAT_TWO_ARROWS_DOWN:
+			return "DOUBLE_FLAT_TWO_ARROWS_DOWN";
+
+		case Accidental.FLAT_TWO_ARROWS_DOWN:
+			return "FLAT_TWO_ARROWS_DOWN";
+
+		case Accidental.NATURAL_TWO_ARROWS_DOWN:
+			return "NATURAL_TWO_ARROWS_DOWN";
+
+		case Accidental.SHARP_TWO_ARROWS_DOWN:
+			return "SHARP_TWO_ARROWS_DOWN";
+
+		case Accidental.DOUBLE_SHARP_TWO_ARROWS_DOWN:
+			return "DOUBLE_SHARP_TWO_ARROWS_DOWN";
+
+		case Accidental.DOUBLE_FLAT_TWO_ARROWS_UP:
+			return "DOUBLE_FLAT_TWO_ARROWS_UP";
+
+		case Accidental.FLAT_TWO_ARROWS_UP:
+			return "FLAT_TWO_ARROWS_UP";
+
+		case Accidental.NATURAL_TWO_ARROWS_UP:
+			return "NATURAL_TWO_ARROWS_UP";
+
+		case Accidental.SHARP_TWO_ARROWS_UP:
+			return "SHARP_TWO_ARROWS_UP";
+
+		case Accidental.DOUBLE_SHARP_TWO_ARROWS_UP:
+			return "DOUBLE_SHARP_TWO_ARROWS_UP";
+
+		case Accidental.DOUBLE_FLAT_THREE_ARROWS_DOWN:
+			return "DOUBLE_FLAT_THREE_ARROWS_DOWN";
+
+		case Accidental.FLAT_THREE_ARROWS_DOWN:
+			return "FLAT_THREE_ARROWS_DOWN";
+
+		case Accidental.NATURAL_THREE_ARROWS_DOWN:
+			return "NATURAL_THREE_ARROWS_DOWN";
+
+		case Accidental.SHARP_THREE_ARROWS_DOWN:
+			return "SHARP_THREE_ARROWS_DOWN";
+
+		case Accidental.DOUBLE_SHARP_THREE_ARROWS_DOWN:
+			return "DOUBLE_SHARP_THREE_ARROWS_DOWN";
+
+		case Accidental.DOUBLE_FLAT_THREE_ARROWS_UP:
+			return "DOUBLE_FLAT_THREE_ARROWS_UP";
+
+		case Accidental.FLAT_THREE_ARROWS_UP:
+			return "FLAT_THREE_ARROWS_UP";
+
+		case Accidental.NATURAL_THREE_ARROWS_UP:
+			return "NATURAL_THREE_ARROWS_UP";
+
+		case Accidental.SHARP_THREE_ARROWS_UP:
+			return "SHARP_THREE_ARROWS_UP";
+
+		case Accidental.DOUBLE_SHARP_THREE_ARROWS_UP:
+			return "DOUBLE_SHARP_THREE_ARROWS_UP";
+
+		case Accidental.LOWER_ONE_SEPTIMAL_COMMA:
+			return "LOWER_ONE_SEPTIMAL_COMMA";
+
+		case Accidental.RAISE_ONE_SEPTIMAL_COMMA:
+			return "RAISE_ONE_SEPTIMAL_COMMA";
+
+		case Accidental.LOWER_TWO_SEPTIMAL_COMMAS:
+			return "LOWER_TWO_SEPTIMAL_COMMAS";
+
+		case Accidental.RAISE_TWO_SEPTIMAL_COMMAS:
+			return "RAISE_TWO_SEPTIMAL_COMMAS";
+
+		case Accidental.LOWER_ONE_UNDECIMAL_QUARTERTONE:
+			return "LOWER_ONE_UNDECIMAL_QUARTERTONE";
+
+		case Accidental.RAISE_ONE_UNDECIMAL_QUARTERTONE:
+			return "RAISE_ONE_UNDECIMAL_QUARTERTONE";
+
+		case Accidental.LOWER_ONE_TRIDECIMAL_QUARTERTONE:
+			return "LOWER_ONE_TRIDECIMAL_QUARTERTONE";
+
+		case Accidental.RAISE_ONE_TRIDECIMAL_QUARTERTONE:
+			return "RAISE_ONE_TRIDECIMAL_QUARTERTONE";
+
+		case Accidental.DOUBLE_FLAT_EQUAL_TEMPERED:
+			return "DOUBLE_FLAT_EQUAL_TEMPERED";
+
+		case Accidental.FLAT_EQUAL_TEMPERED:
+			return "FLAT_EQUAL_TEMPERED";
+
+		case Accidental.NATURAL_EQUAL_TEMPERED:
+			return "NATURAL_EQUAL_TEMPERED";
+
+		case Accidental.SHARP_EQUAL_TEMPERED:
+			return "SHARP_EQUAL_TEMPERED";
+
+		case Accidental.DOUBLE_SHARP_EQUAL_TEMPERED:
+			return "DOUBLE_SHARP_EQUAL_TEMPERED";
+
+		case Accidental.QUARTER_FLAT_EQUAL_TEMPERED:
+			return "QUARTER_FLAT_EQUAL_TEMPERED";
+
+		case Accidental.QUARTER_SHARP_EQUAL_TEMPERED:
+			return "QUARTER_SHARP_EQUAL_TEMPERED";
+
+		case Accidental.FLAT_17:
+			return "FLAT_17";
+
+		case Accidental.SHARP_17:
+			return "SHARP_17";
+
+		case Accidental.FLAT_19:
+			return "FLAT_19";
+
+		case Accidental.SHARP_19:
+			return "SHARP_19";
+
+		case Accidental.FLAT_23:
+			return "FLAT_23";
+
+		case Accidental.SHARP_23:
+			return "SHARP_23";
+
+		case Accidental.FLAT_31:
+			return "FLAT_31";
+
+		case Accidental.SHARP_31:
+			return "SHARP_31";
+
+		case Accidental.FLAT_53:
+			return "FLAT_53";
+
+		case Accidental.SHARP_53:
+			return "SHARP_53";
+
+		case Accidental.SORI:
+			return "SORI";
+
+		case Accidental.KORON:
+			return "KORON";
+
+		case Accidental.TEN_TWELFTH_FLAT:
+			return "TEN_TWELFTH_FLAT";
+
+		case Accidental.TEN_TWELFTH_SHARP:
+			return "TEN_TWELFTH_SHARP";
+
+		case Accidental.ELEVEN_TWELFTH_FLAT:
+			return "ELEVEN_TWELFTH_FLAT";
+
+		case Accidental.ELEVEN_TWELFTH_SHARP:
+			return "ELEVEN_TWELFTH_SHARP";
+
+		case Accidental.ONE_TWELFTH_FLAT:
+			return "ONE_TWELFTH_FLAT";
+
+		case Accidental.ONE_TWELFTH_SHARP:
+			return "ONE_TWELFTH_SHARP";
+
+		case Accidental.TWO_TWELFTH_FLAT:
+			return "TWO_TWELFTH_FLAT";
+
+		case Accidental.TWO_TWELFTH_SHARP:
+			return "TWO_TWELFTH_SHARP";
+
+		case Accidental.THREE_TWELFTH_FLAT:
+			return "THREE_TWELFTH_FLAT";
+
+		case Accidental.THREE_TWELFTH_SHARP:
+			return "THREE_TWELFTH_SHARP";
+
+		case Accidental.FOUR_TWELFTH_FLAT:
+			return "FOUR_TWELFTH_FLAT";
+
+		case Accidental.FOUR_TWELFTH_SHARP:
+			return "FOUR_TWELFTH_SHARP";
+
+		case Accidental.FIVE_TWELFTH_FLAT:
+			return "FIVE_TWELFTH_FLAT";
+
+		case Accidental.FIVE_TWELFTH_SHARP:
+			return "FIVE_TWELFTH_SHARP";
+
+		case Accidental.SIX_TWELFTH_FLAT:
+			return "SIX_TWELFTH_FLAT";
+
+		case Accidental.SIX_TWELFTH_SHARP:
+			return "SIX_TWELFTH_SHARP";
+
+		case Accidental.SEVEN_TWELFTH_FLAT:
+			return "SEVEN_TWELFTH_FLAT";
+
+		case Accidental.SEVEN_TWELFTH_SHARP:
+			return "SEVEN_TWELFTH_SHARP";
+
+		case Accidental.EIGHT_TWELFTH_FLAT:
+			return "EIGHT_TWELFTH_FLAT";
+
+		case Accidental.EIGHT_TWELFTH_SHARP:
+			return "EIGHT_TWELFTH_SHARP";
+
+		case Accidental.NINE_TWELFTH_FLAT:
+			return "NINE_TWELFTH_FLAT";
+
+		case Accidental.NINE_TWELFTH_SHARP:
+			return "NINE_TWELFTH_SHARP";
+
+		case Accidental.SAGITTAL_5V7KD:
+			return "SAGITTAL_5V7KD";
+
+		case Accidental.SAGITTAL_5V7KU:
+			return "SAGITTAL_5V7KU";
+
+		case Accidental.SAGITTAL_5CD:
+			return "SAGITTAL_5CD";
+
+		case Accidental.SAGITTAL_5CU:
+			return "SAGITTAL_5CU";
+
+		case Accidental.SAGITTAL_7CD:
+			return "SAGITTAL_7CD";
+
+		case Accidental.SAGITTAL_7CU:
+			return "SAGITTAL_7CU";
+
+		case Accidental.SAGITTAL_25SDD:
+			return "SAGITTAL_25SDD";
+
+		case Accidental.SAGITTAL_25SDU:
+			return "SAGITTAL_25SDU";
+
+		case Accidental.SAGITTAL_35MDD:
+			return "SAGITTAL_35MDD";
+
+		case Accidental.SAGITTAL_35MDU:
+			return "SAGITTAL_35MDU";
+
+		case Accidental.SAGITTAL_11MDD:
+			return "SAGITTAL_11MDD";
+
+		case Accidental.SAGITTAL_11MDU:
+			return "SAGITTAL_11MDU";
+
+		case Accidental.SAGITTAL_11LDD:
+			return "SAGITTAL_11LDD";
+
+		case Accidental.SAGITTAL_11LDU:
+			return "SAGITTAL_11LDU";
+
+		case Accidental.SAGITTAL_35LDD:
+			return "SAGITTAL_35LDD";
+
+		case Accidental.SAGITTAL_35LDU:
+			return "SAGITTAL_35LDU";
+
+		case Accidental.SAGITTAL_FLAT25SU:
+			return "SAGITTAL_FLAT25SU";
+
+		case Accidental.SAGITTAL_SHARP25SD:
+			return "SAGITTAL_SHARP25SD";
+
+		case Accidental.SAGITTAL_FLAT7CU:
+			return "SAGITTAL_FLAT7CU";
+
+		case Accidental.SAGITTAL_SHARP7CD:
+			return "SAGITTAL_SHARP7CD";
+
+		case Accidental.SAGITTAL_SHARP5CD:
+			return "SAGITTAL_SHARP5CD";
+
+		case Accidental.SAGITTAL_SHARP5V7KD:
+			return "SAGITTAL_SHARP5V7KD";
+
+		case Accidental.SAGITTAL_FLAT5CU:
+			return "SAGITTAL_FLAT5CU";
+
+		case Accidental.SAGITTAL_FLAT5V7KU:
+			return "SAGITTAL_FLAT5V7KU";
+
+		case Accidental.SAGITTAL_FLAT:
+			return "SAGITTAL_FLAT";
+
+		case Accidental.SAGITTAL_SHARP:
+			return "SAGITTAL_SHARP";
+		
+		default:
+			throw "Unrecognised accidental: " + note.accidentalType;
+	}
+}
