@@ -21,52 +21,52 @@ const VERSION = "1.0.0-alpha";
 const ACCIDENTAL_DATA = {
 	"NONE":
 	{
-		"TPC": false,
+		"TPC": true,
 		"DEFAULT_OFFSET": 0,
 	},
 	"FLAT":
 	{
-		"TPC": false,
+		"TPC": true,
 		"DEFAULT_OFFSET": 0,
 	},
 	"NATURAL":
 	{
-		"TPC": false,
+		"TPC": true,
 		"DEFAULT_OFFSET": 0,
 	},
 	"SHARP":
 	{
-		"TPC": false,
+		"TPC": true,
 		"DEFAULT_OFFSET": 0,
 	},
 	"SHARP2":
 	{
-		"TPC": false,
+		"TPC": true,
 		"DEFAULT_OFFSET": 0,
 	},
 	"FLAT2":
 	{
-		"TPC": false,
+		"TPC": true,
 		"DEFAULT_OFFSET": 0,
 	},
 	"SHARP3":
 	{
-		"TPC": false,
+		"TPC": true,
 		"DEFAULT_OFFSET": 0,
 	},
 	"FLAT3":
 	{
-		"TPC": false,
+		"TPC": true,
 		"DEFAULT_OFFSET": 0,
 	},
 	"NATURAL_FLAT":
 	{
-		"TPC": false,
+		"TPC": true,
 		"DEFAULT_OFFSET": 0,
 	},
 	"NATURAL_SHARP":
 	{
-		"TPC": false,
+		"TPC": true,
 		"DEFAULT_OFFSET": 0,
 	},
 	"SHARP_SHARP":
