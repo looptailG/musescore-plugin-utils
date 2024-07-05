@@ -48,6 +48,7 @@ const CIRCLE_OF_FIFTHS_DISTANCE = {
  */
 function circleOfFifthsDistance(n1, n2, tpcMode = "tpc1")
 {
+	// TODO: Get the correct tpc property by note[tpcMode], to avoid an extra switch.
 	var n1Tpc;
 	switch (typeof n1)
 	{
