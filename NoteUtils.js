@@ -1,5 +1,5 @@
 /*
-	A collection of functions and constants about note names.
+	A collection of functions and constants about notes.
 	Copyright (C) 2024 Alessandro Culatti
 
 	This program is free software: you can redistribute it and/or modify
@@ -52,4 +52,12 @@ function getNoteLetter(note, tpcMode = "tpc1")
 		case -2:
 			return "B";
 	}
+}
+
+/*
+ * Return the octave of the input note.
+ */
+function getOctave(note)
+{
+	return Math.floor(note.pitch / 12) - 1;
 }
