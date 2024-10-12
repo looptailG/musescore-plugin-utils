@@ -1127,6 +1127,6 @@ function getAccidentalName(note)
 			return "SAGITTAL_SHARP";
 		
 		default:
-			throw "Unrecognised accidental: " + note.accidentalType;
+			throw "Unrecognised accidental type: " + note.accidentalType;
 	}
 }
