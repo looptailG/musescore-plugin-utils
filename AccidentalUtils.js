@@ -18,7 +18,6 @@
 
 const VERSION = "1.0.1";
 
-// TODO: Check which accidentals are actually handled by the tpc property.
 const ACCIDENTAL_DATA = {
 	"NONE":
 	{
@@ -532,12 +531,12 @@ const ACCIDENTAL_DATA = {
 	},
 	"SIX_TWELFTH_FLAT":
 	{
-		"TPC": false,
+		"TPC": true,
 		"DEFAULT_OFFSET": 0,
 	},
 	"SIX_TWELFTH_SHARP":
 	{
-		"TPC": false,
+		"TPC": true,
 		"DEFAULT_OFFSET": 0,
 	},
 	"SEVEN_TWELFTH_FLAT":
