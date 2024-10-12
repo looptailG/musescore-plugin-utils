@@ -16,7 +16,7 @@
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const VERSION = "1.0.0";
+const VERSION = "1.0.1";
 
 // TODO: Check which accidentals are actually handled by the tpc property.
 const ACCIDENTAL_DATA = {
@@ -711,14 +711,6 @@ function getAccidentalName(note)
 	// corresponding to the enum value.  Parsing it as int is needed to properly
 	// compare it with the enum values in a switch statement.
 	var accidentalType = parseInt("" + note.accidentalType);
-	// TODO: Check if it's still necessary for MS 4.4 and later.
-	// In Musescore3 the accidentalType property is a signed integer, while the
-	// Accidentals enum values are always positive.  If it's negative, convert
-	// it to an unsigned 8 bit integer by shifting it by 256.
-	if (accidentalType < 0)
-	{
-		accidentalType += 256;
-	}
 	if ((accidentalType < 0) || (accidentalType >= 256))
 	{
 		throw "Out of bound accidental type: " + accidentalType;
