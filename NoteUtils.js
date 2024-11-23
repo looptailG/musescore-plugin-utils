@@ -64,10 +64,59 @@ function getNoteLetter(note, tpcMode = "tpc1")
 	}
 }
 
-/*
+/**
  * Return the octave of the input note.
  */
 function getOctave(note)
 {
 	return Math.floor(note.pitch / 12) - 1;
+}
+
+/**
+ * Return the distance in semitones between the input notes.
+ */
+function getSemitoneDistance(n1, n2)
+{
+	function getSemitone(note)
+	{
+		const match = note.match(/^([A-G])(bb|b|#|x)?$/);
+		if (!match)
+		{
+			throw "Invalid note name: " + note;
+		}
+		
+		const noteName = match[1];
+		const accidental = match[2] || "";
+		let semitone = SEMITONE_MAP[noteName];
+		switch (accidental)
+		{
+			case "bb":
+				semitone -= 2;
+				break;
+			
+			case "b":
+				semitone -= 1;
+				break;
+			
+			case "":
+				break;
+			
+			case "#":
+				semitone += 1;
+				break;
+			
+			case "x":
+				semitone += 2;
+				break;
+			
+			default:
+				throw "Invalid accidental: " + accidental;
+		}
+		
+		return (semitone + 12) % 12;
+	}
+	
+	const s1 = getSemitone(n1);
+	const s2 = getSemitone(n2);
+	return s2 - s1;
 }
