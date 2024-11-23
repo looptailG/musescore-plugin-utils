@@ -16,7 +16,17 @@
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const VERSION = "1.0.0";
+const VERSION = "1.1.0";
+
+const SEMITONE_MAP = {
+	"C": 0,
+	"D": 2,
+	"E": 4,
+	"F": 5,
+	"G": 7,
+	"A": 9,
+	"B": 11
+};
 
 /**
  * Return the english note name for the input note.
