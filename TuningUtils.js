@@ -19,7 +19,7 @@
 const VERSION = "1.2.0";
 
 // Size in cents of a justly tuned perfect fifth.
-const JUST_FIFTH = 1200.0 * Math.log2(3 / 2);
+const JUST_FIFTH = intervalInCents(3 / 2);
 // Size in cents of a 12EDO perfect fifth.
 const DEFAULT_FIFTH = 700.0;
 // Size in cents of the smallest fifth in the diatonic range.  It's equal to the
@@ -30,7 +30,7 @@ const SMALLEST_DIATONIC_FIFTH = 1200.0 / 7 * 4;
 const LARGEST_DIATONIC_FIFTH = 1200.0 / 5 * 3;
 
 // Size in cents of the syntonic comma.
-const SYNTONIC_COMMA = 1200.0 * Math.log2(81 / 80);
+const SYNTONIC_COMMA = intervalInCents(81 / 80);
 
 // Note distance in the circle of fifths, from the note C.
 const CIRCLE_OF_FIFTHS_DISTANCE = {
