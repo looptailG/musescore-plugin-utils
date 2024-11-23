@@ -16,7 +16,7 @@
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const VERSION = "1.1.1";
+const VERSION = "1.2.0";
 
 // Size in cents of a justly tuned perfect fifth.
 const JUST_FIFTH = 1200.0 * Math.log2(3 / 2);
@@ -79,4 +79,12 @@ function circleOfFifthsDistance(n1, n2, tpcMode = "tpc1")
 	}
 	
 	return n1Tpc - n2Tpc;
+}
+
+/**
+ * Return the input frequency ratio in cents.
+ */
+function intervalInCents(frequencyRatio)
+{
+	return 1200 * Math.log2(frequencyRatio);
 }
