@@ -16,7 +16,17 @@
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const VERSION = "1.0.0";
+const VERSION = "1.1.0";
+
+const SEMITONE_MAP = {
+	"C": 0,
+	"D": 2,
+	"E": 4,
+	"F": 5,
+	"G": 7,
+	"A": 9,
+	"B": 11
+};
 
 /**
  * Return the english note name for the input note.
@@ -54,10 +64,91 @@ function getNoteLetter(note, tpcMode = "tpc1")
 	}
 }
 
-/*
+/**
  * Return the octave of the input note.
  */
 function getOctave(note)
 {
 	return Math.floor(note.pitch / 12) - 1;
+}
+
+/**
+ * Return the note accidental, written with ascii characters only.
+ */
+function getAsciiAccidental(note, tpcMode = "tpc1")
+{
+	var tpc = note[tpcMode];
+	if ((-1 <= tpc) && (tpc <= 5))
+	{
+		return "bb";
+	}
+	else if ((6 <= tpc) && (tpc <= 12))
+	{
+		return "b"
+	}
+	else if ((13 <= tpc) && (tpc <= 19))
+	{
+		return "";
+	}
+	else if ((20 <= tpc) && (tpc <= 26))
+	{
+		return "#";
+	}
+	else if ((27 <= tpc) && (tpc <= 33))
+	{
+		return "x";
+	}
+	else
+	{
+		throw "Invalid tonal pitch class: " + tpc;
+	}
+}
+
+/**
+ * Return the distance in semitones between the input notes.
+ */
+function getSemitoneDistance(n1, n2)
+{
+	function getSemitone(note)
+	{
+		const match = note.match(/^([A-G])(bb|b|#|x)?$/);
+		if (!match)
+		{
+			throw "Invalid note name: " + note;
+		}
+		
+		const noteName = match[1];
+		const accidental = match[2] || "";
+		let semitone = SEMITONE_MAP[noteName];
+		switch (accidental)
+		{
+			case "bb":
+				semitone -= 2;
+				break;
+			
+			case "b":
+				semitone -= 1;
+				break;
+			
+			case "":
+				break;
+			
+			case "#":
+				semitone += 1;
+				break;
+			
+			case "x":
+				semitone += 2;
+				break;
+			
+			default:
+				throw "Invalid accidental: " + accidental;
+		}
+		
+		return (semitone + 12) % 12;
+	}
+	
+	const s1 = getSemitone(n1);
+	const s2 = getSemitone(n2);
+	return s1 - s2;
 }
