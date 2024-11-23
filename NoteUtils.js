@@ -73,6 +73,38 @@ function getOctave(note)
 }
 
 /**
+ * Return the note accidental, written with ascii characters only.
+ */
+function getAsciiAccidental(note, tpcMode = "tpc1")
+{
+	var tpc = note[tpcMode];
+	if ((-1 <= tpc) && (tpc <= 5))
+	{
+		return "bb";
+	}
+	else if ((6 <= tpc) && (tpc <= 12))
+	{
+		return "b"
+	}
+	else if ((13 <= tpc) && (tpc <= 19))
+	{
+		return "";
+	}
+	else if ((20 <= tpc) && (tpc <= 26))
+	{
+		return "#";
+	}
+	else if ((27 <= tpc) && (tpc <= 33))
+	{
+		return "x";
+	}
+	else
+	{
+		throw "Invalid tonal pitch class: " + tpc;
+	}
+}
+
+/**
  * Return the distance in semitones between the input notes.
  */
 function getSemitoneDistance(n1, n2)
