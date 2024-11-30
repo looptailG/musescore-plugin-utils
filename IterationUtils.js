@@ -16,7 +16,7 @@
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const VERSION = "1.0.0";
+const VERSION = "1.0.1";
 
 const ELEMENT_STAFF_TEXT = 48;
 
@@ -40,7 +40,7 @@ function iterate(curScore, actions, logger)
 	cursor.rewind(Cursor.SELECTION_START);
 	if (!cursor.segment)
 	{
-		logger.log("Tuning the entire score.");
+		logger.log("Iterating on the entire score.");
 		startStaff = 0;
 		endStaff = curScore.nstaves - 1;
 		startTick = 0;
@@ -48,7 +48,7 @@ function iterate(curScore, actions, logger)
 	}
 	else
 	{
-		logger.log("Tuning only the current selection.");
+		logger.log("Iterating only on the current selection.");
 		startStaff = cursor.staffIdx;
 		startTick = cursor.tick;
 		cursor.rewind(Cursor.SELECTION_END);
@@ -63,8 +63,8 @@ function iterate(curScore, actions, logger)
 		{
 			endTick = cursor.tick;
 		}
-		logger.trace("Tuning only ticks: " + startTick + " - " + endTick);
-		logger.trace("Tuning only staffs: " + startStaff + " - " + endStaff);
+		logger.trace("Iterating only on ticks: " + startTick + " - " + endTick);
+		logger.trace("Iterating only on staffs: " + startStaff + " - " + endStaff);
 	}
 	
 	// Iterate on the score.
@@ -72,7 +72,7 @@ function iterate(curScore, actions, logger)
 	{
 		for (let voice = 0; voice < 4; voice++)
 		{
-			logger.log("Tuning Staff: " + staff + "; Voice: " + voice);
+			logger.log("Staff: " + staff + "; Voice: " + voice);
 			
 			cursor.voice = voice;
 			cursor.staffIdx = staff;
@@ -105,26 +105,27 @@ function iterate(curScore, actions, logger)
 					previousKeySignature = cursor.keySignature;
 				}
 				
-				for (let i = 0; i < cursor.segment.annotations.length; i++)
+				if (onAnnotation)
 				{
-					let annotation = cursor.segment.annotations[i];
-					let annotationText = annotation.text;
-					if (annotationText)
+					for (let i = 0; i < cursor.segment.annotations.length; i++)
 					{
-						if (onAnnotation)
+						let annotation = cursor.segment.annotations[i];
+						if (staffTextOnCurrentStaffOnly && (annotation.type === ELEMENT_STAFF_TEXT))
 						{
-							if ((annotation.type === ELEMENT_STAFF_TEXT) && staffTextOnCurrentStaffOnly)
-							{
-								let annotationPart = annotation.staff.part;
-								if ((4 * staff >= annotationPart.startTrack) && (4 * staff < annotationPart.endTrack))
-								{
-									onAnnotation(annotation);
-								}
+							// Call onAnnotation() only if the staff text is for
+							// the current staff.
+							let annotationPart = annotation.staff.part;
+							if (!(
+								(4 * staff >= annotationPart.startTrack)
+								&& (4 * staff < annotationPart.endTrack)
+							)) {
+								continue;
 							}
-							else
-							{
-								onAnnotation(annotation);
-							}
+						}
+						
+						if (annotation.text)
+						{
+							onAnnotation(annotation);
 						}
 					}
 				}
