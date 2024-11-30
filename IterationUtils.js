@@ -105,26 +105,27 @@ function iterate(curScore, actions, logger)
 					previousKeySignature = cursor.keySignature;
 				}
 				
-				for (let i = 0; i < cursor.segment.annotations.length; i++)
+				if (onAnnotation)
 				{
-					let annotation = cursor.segment.annotations[i];
-					let annotationText = annotation.text;
-					if (annotationText)
+					for (let i = 0; i < cursor.segment.annotations.length; i++)
 					{
-						if (onAnnotation)
+						let annotation = cursor.segment.annotations[i];
+						if (staffTextOnCurrentStaffOnly && (annotation.type === ELEMENT_STAFF_TEXT))
 						{
-							if ((annotation.type === ELEMENT_STAFF_TEXT) && staffTextOnCurrentStaffOnly)
-							{
-								let annotationPart = annotation.staff.part;
-								if ((4 * staff >= annotationPart.startTrack) && (4 * staff < annotationPart.endTrack))
-								{
-									onAnnotation(annotation);
-								}
+							// Call onAnnotation() only if the staff text is for
+							// the current staff.
+							let annotationPart = annotation.staff.part;
+							if (!(
+								(4 * staff >= annotationPart.startTrack)
+								&& (4 * staff < annotationPart.endTrack)
+							)) {
+								continue;
 							}
-							else
-							{
-								onAnnotation(annotation);
-							}
+						}
+						
+						if (annotation.text)
+						{
+							onAnnotation(annotation);
 						}
 					}
 				}
