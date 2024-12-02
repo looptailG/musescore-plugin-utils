@@ -16,7 +16,7 @@
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const VERSION = "1.0.1";
+const VERSION = "1.0.2";
 
 const ELEMENT_STAFF_TEXT = 48;
 
@@ -88,17 +88,17 @@ function iterate(curScore, actions, logger)
 			// Loop on the element of the current staff.
 			while (cursor.segment && (cursor.tick <= endTick))
 			{
-				if (cursor.segment.tick == cursor.measure.firstSegment.tick)
+				if (onNewMeasure)
 				{
-					if (onNewMeasure)
+					if (cursor.segment.tick == cursor.measure.firstSegment.tick)
 					{
 						onNewMeasure();
 					}
 				}
 				
-				if (cursor.keySignature != previousKeySignature)
+				if (onKeySignatureChange)
 				{
-					if (onKeySignatureChange)
+					if (cursor.keySignature != previousKeySignature)
 					{
 						onKeySignatureChange(cursor.keySignature);
 					}
@@ -130,25 +130,22 @@ function iterate(curScore, actions, logger)
 					}
 				}
 				
-				if (cursor.element && (cursor.element.type == Element.CHORD))
+				if (onNote)
 				{
-					let graceChords = cursor.element.graceNotes;
-					for (let i = 0; i < graceChords.length; i++)
+					if (cursor.element && (cursor.element.type == Element.CHORD))
 					{
-						let notes = graceChords[i].notes;
-						for (let j = 0; j < notes.length; j++)
+						let graceChords = cursor.element.graceNotes;
+						for (let i = 0; i < graceChords.length; i++)
 						{
-							if (onNote)
+							let notes = graceChords[i].notes;
+							for (let j = 0; j < notes.length; j++)
 							{
 								onNote(notes[j]);
 							}
 						}
-					}
-					
-					let notes = cursor.element.notes;
-					for (let i = 0; i < notes.length; i++)
-					{
-						if (onNote)
+						
+						let notes = cursor.element.notes;
+						for (let i = 0; i < notes.length; i++)
 						{
 							onNote(notes[i]);
 						}
