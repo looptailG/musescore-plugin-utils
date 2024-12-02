@@ -18,8 +18,6 @@
 
 const VERSION = "1.0.2";
 
-const ELEMENT_STAFF_TEXT = 48;
-
 function iterate(curScore, actions, logger)
 {
 	let onStaffStart = actions.onStaffStart || null;
@@ -110,7 +108,7 @@ function iterate(curScore, actions, logger)
 					for (let i = 0; i < cursor.segment.annotations.length; i++)
 					{
 						let annotation = cursor.segment.annotations[i];
-						if (staffTextOnCurrentStaffOnly && (annotation.type === ELEMENT_STAFF_TEXT))
+						if (staffTextOnCurrentStaffOnly && (annotation.type === Element.STAFF_TEXT))
 						{
 							// Call onAnnotation() only if the staff text is for
 							// the current staff.
