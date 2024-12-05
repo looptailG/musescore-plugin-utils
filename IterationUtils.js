@@ -16,7 +16,7 @@
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const VERSION = "1.0.2";
+const VERSION = "1.1.0";
 
 function iterate(curScore, actions, logger)
 {
@@ -121,10 +121,7 @@ function iterate(curScore, actions, logger)
 							}
 						}
 						
-						if (annotation.text)
-						{
-							onAnnotation(annotation);
-						}
+						onAnnotation(annotation);
 					}
 				}
 				
