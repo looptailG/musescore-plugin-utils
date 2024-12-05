@@ -27,7 +27,7 @@ function iterate(curScore, actions, logger)
 	let onAnnotation = actions.onAnnotation || null;
 	let staffTextOnCurrentStaffOnly = actions.staffTextOnCurrentStaffOnly || true;
 	let onNote = actions.onNote || null;
-	let onStaffEnd = action.onStaffEnd || null;
+	let onStaffEnd = actions.onStaffEnd || null;
 	
 	curScore.startCmd();
 	let cursor = curScore.newCursor();
