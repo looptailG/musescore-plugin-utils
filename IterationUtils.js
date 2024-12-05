@@ -20,12 +20,14 @@ const VERSION = "1.1.0";
 
 function iterate(curScore, actions, logger)
 {
+	let filterVoices = actions.filterVoices || null;
 	let onStaffStart = actions.onStaffStart || null;
 	let onNewMeasure = actions.onNewMeasure || null;
 	let onKeySignatureChange = actions.onKeySignatureChange || null;
 	let onAnnotation = actions.onAnnotation || null;
 	let staffTextOnCurrentStaffOnly = actions.staffTextOnCurrentStaffOnly || true;
 	let onNote = actions.onNote || null;
+	let onStaffEnd = action.onStaffEnd || null;
 	
 	curScore.startCmd();
 	let cursor = curScore.newCursor();
@@ -70,6 +72,14 @@ function iterate(curScore, actions, logger)
 	{
 		for (let voice = 0; voice < 4; voice++)
 		{
+			if (filterVoices)
+			{
+				if (!filterVoices.includes(voice))
+				{
+					continue;
+				}
+			}
+			
 			logger.log("Staff: " + staff + "; Voice: " + voice);
 			
 			cursor.voice = voice;
@@ -148,6 +158,11 @@ function iterate(curScore, actions, logger)
 				}
 				
 				cursor.next();
+			}
+			
+			if (onStaffEnd)
+			{
+				onStaffEnd();
 			}
 		}
 	}
