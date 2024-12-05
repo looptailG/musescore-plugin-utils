@@ -86,7 +86,7 @@ function iterate(curScore, actions, logger)
 			cursor.staffIdx = staff;
 			cursor.rewindToTick(startTick);
 			
-			let previousKeySignature = cursor.keySignature;
+			let previousKeySignature = null;
 			
 			if (onStaffStart)
 			{
