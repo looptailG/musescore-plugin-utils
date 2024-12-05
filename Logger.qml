@@ -21,7 +21,7 @@ import FileIO 3.0
 FileIO
 {
 	id: logger;
-	property var version: "1.0.0";
+	property var version: "1.0.1";
 	
 	source: Qt.resolvedUrl(".").toString().substring(8) + "logs/" + getFileDateTime() + "_log.txt";
 	
@@ -45,7 +45,7 @@ FileIO
 		
 		if (level >= logLevel)
 		{
-			logMessages += getRFC3339DateTime() + logLevels[logLevel] + message + "\n";
+			logMessages += getRFC3339DateTime() + logLevels[level] + message + "\n";
 		}
 	}
 	
