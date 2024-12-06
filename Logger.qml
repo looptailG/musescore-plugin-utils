@@ -77,6 +77,16 @@ FileIO
 		}
 	}
 	
+	function getProperties(obj)
+	{
+		var s = "" + obj + ":";
+		for (var key in obj)
+		{
+			s += "\n" + key + ": " + obj[key];
+		}
+		return s;
+	}
+	
 	function getFileDateTime()
 	{
 		var currentDate = new Date();
