@@ -98,7 +98,7 @@ function iterate(curScore, actions, logger)
 			{
 				if (onNewMeasure)
 				{
-					if (cursor.segment.tick == cursor.measure.firstSegment.tick)
+					if (cursor.segment.tick === cursor.measure.firstSegment.tick)
 					{
 						onNewMeasure();
 					}
@@ -137,7 +137,7 @@ function iterate(curScore, actions, logger)
 				
 				if (onNote)
 				{
-					if (cursor.element && (cursor.element.type == Element.CHORD))
+					if (cursor.element && (cursor.element.type === Element.CHORD))
 					{
 						let graceChords = cursor.element.graceNotes;
 						for (let i = 0; i < graceChords.length; i++)
