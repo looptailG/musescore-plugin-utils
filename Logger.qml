@@ -21,7 +21,7 @@ import FileIO 3.0
 FileIO
 {
 	id: logger;
-	property var version: "1.0.1";
+	property var version: "1.1.0";
 	
 	source: Qt.resolvedUrl(".").toString().substring(8) + "logs/" + getFileDateTime() + "_log.txt";
 	
