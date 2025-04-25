@@ -1,6 +1,6 @@
 /*
 	QML component for writing log messages from a MuseScore plugin.
-	Copyright (C) 2024 Alessandro Culatti
+	Copyright (C) 2024 - 2025 Alessandro Culatti
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
