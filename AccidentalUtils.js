@@ -1,6 +1,6 @@
 /*
 	A collection of functions and constants about accidentals.
-	Copyright (C) 2024 Alessandro Culatti
+	Copyright (C) 2024 - 2025 Alessandro Culatti
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -16,7 +16,19 @@
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const VERSION = "1.0.1";
+const VERSION = "1.1.0";
+
+/**
+ * Parse the text contained in the input annotation as a custom key signature,
+ * with the notes in the format X.X.X.X.X.X.X, where X are the accidentals
+ * ordered according to the circle of fifths: F.C.G.D.A.E.B.
+ * Returns a map with the names of the notes as keys, and the acciedntals
+ * applied to them as values.
+ */
+function parseCustomKeySignature(annotation)
+{
+	
+}
 
 const ACCIDENTAL_DATA = {
 	"NONE":
