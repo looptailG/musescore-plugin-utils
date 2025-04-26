@@ -18,16 +18,107 @@
 
 const VERSION = "1.1.0";
 
+const CUSTOM_KEY_SIGNATURE_NOTE_ORDER = ["F", "C", "G", "D", "A", "E", "B"]; 
+
 /**
- * Parse the text contained in the input annotation as a custom key signature,
- * with the notes in the format X.X.X.X.X.X.X, where X are the accidentals
- * ordered according to the circle of fifths: F.C.G.D.A.E.B.
- * Returns a map with the names of the notes as keys, and the acciedntals
- * applied to them as values.
+ * Parse the text contained in the input string as a custom key signature, with
+ * the notes in the format X.X.X.X.X.X.X, where X are the accidentals applied to
+ * each note, ordered according to the circle of fifths: F.C.G.D.A.E.B.  These
+ * accidentals are written using ASCII characters only.
+ * Currently only supports accidentals for 31EDO and 22EDO.
+ * Returns a map with the names of the notes as keys, and the names of the
+ * acciedntals applied to them as values.  If a note does not have an accidental
+ * applied to itself, it will not be present as key in the map.
  */
-function parseCustomKeySignature(annotation)
+function parseCustomKeySignature(keySignatureString)
 {
-	
+	let customKeySignature = {};
+	let splittedKeySignatureText = keySignatureString.split(".");
+	for (let i = 0; i < splittedKeySignatureText.length; i++)
+	{
+		let currentNote = CUSTOM_KEY_SIGNATURE_NOTE_ORDER[i];
+		let currentAccidental = splittedKeySignatureText[i];
+		let accidentalName = "";
+		switch (currentAccidental)
+		{
+			// Non-microtonal accidentals are automatically handled by Musescore
+			// even in custom key signatures, so we only have to check for
+			// microtonal accidentals.
+			case "bb":
+			case "b":
+			case "":
+			case "h":
+			case "#":
+			case "x":
+				break;
+
+			// 31EDO accidentals.
+			case "db":
+				accidentalName = "MIRRORED_FLAT2";
+				break;
+
+			case "d":
+				accidentalName = "MIRRORED_FLAT";
+				break;
+
+			case "t":
+				accidentalName = "SHARP_SLASH";
+				break;
+
+			case "t#":
+				accidentalName = "SHARP_SLASH4";
+				break;
+			
+			// 22EDO accidentals.
+			case "vbb":
+				accidentalName = "FLAT2_ARROW_DOWN";
+				break;
+
+			case "^bb":
+				accidentalName = "FLAT2_ARROW_UP";
+				break;
+
+			case "vb":
+				accidentalName = "FLAT_ARROW_DOWN";
+				break;
+
+			case "^b":
+				accidentalName = "FLAT_ARROW_UP";
+				break;
+
+			case "vh":
+				accidentalName = "NATURAL_ARROW_DOWN";
+				break;
+
+			case "^h":
+				accidentalName = "NATURAL_ARROW_UP";
+				break;
+
+			case "v#":
+				accidentalName = "SHARP_ARROW_DOWN";
+				break;
+
+			case "^#":
+				accidentalName = "SHARP_ARROW_UP";
+				break;
+
+			case "vx":
+				accidentalName = "SHARP2_ARROW_DOWN";
+				break;
+
+			case "^x":
+				accidentalName = "SHARP2_ARROW_UP";
+				break;
+
+			default:
+				throw "Unsupported accidental in the custom key signature: " + currentAccidental;
+		}
+		if (accidentalName != "")
+		{
+			customKeySignature[currentNote] = accidentalName;
+		}
+	}
+	return customKeySignature;
 }
 
 const ACCIDENTAL_DATA = {
