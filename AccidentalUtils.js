@@ -1232,3 +1232,13 @@ function getAccidentalName(note)
 			throw "Unrecognised accidental type: " + note.accidentalType;
 	}
 }
+
+/**
+ * Return the implicit accidental applied to the input note, going backwards in
+ * the score to look for notes with accidentals in the current measure, and for
+ * custom key signature previously in the score.
+ */
+function getImplicitAccidental(note)
+{
+	
+}
