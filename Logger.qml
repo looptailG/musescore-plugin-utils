@@ -29,12 +29,13 @@ FileIO
 	property var logLevel: 2;
 	property variant logLevels:
 	[
-		" | TRACE   | ",
-		" | INFO    | ",
-		" | WARNING | ",
-		" | ERROR   | ",
-		" | FATAL   | ",
+		"TRACE",
+		"INFO",
+		"WARNING",
+		"ERROR",
+		"FATAL",
 	]
+	property var separator: "\t";
 	
 	function log(message, level)
 	{
@@ -45,7 +46,7 @@ FileIO
 		
 		if (level >= logLevel)
 		{
-			logMessages += getRFC3339DateTime() + logLevels[level] + message + "\n";
+			logMessages += getRFC3339DateTime() + separator + logLevels[level] + separator + message + "\n";
 		}
 	}
 	
