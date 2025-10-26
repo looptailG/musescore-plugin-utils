@@ -84,10 +84,10 @@ function iterate(curScore, actions, logger)
 				onStaffStart();
 			}
 			
-			// Loop on the element of the current staff.
-			while (cursor.segment && (cursor.tick <= endTick))
+			// Loop on the elements of the current staff.
+			while (cursor.tick <= endTick)
 			{
-				if (onNewMeasure)
+				if (onNewMeasure && cursor.segment)
 				{
 					if (cursor.segment.tick === cursor.measure.firstSegment.tick)
 					{
@@ -104,7 +104,7 @@ function iterate(curScore, actions, logger)
 					previousKeySignature = cursor.keySignature;
 				}
 				
-				if (onAnnotation)
+				if (onAnnotation && cursor.segment)
 				{
 					for (let i = 0; i < cursor.segment.annotations.length; i++)
 					{
