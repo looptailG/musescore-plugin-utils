@@ -75,7 +75,16 @@ function iterate(curScore, actions, logger)
 			
 			cursor.voice = voice;
 			cursor.staffIdx = staff;
-			cursor.rewind(Cursor.SELECTION_START);
+			if (startTick == 0)
+			{
+				// This is necessary in case nothing is selected before running
+				// the plugin, in which case SELECTION_START is not valorised.
+				cursor.rewind(Cursor.SCORE_START);
+			}
+			else
+			{
+				cursor.rewind(Cursor.SELECTION_START);
+			}
 			
 			let previousKeySignature = null;
 			
