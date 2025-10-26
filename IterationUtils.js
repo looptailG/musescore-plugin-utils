@@ -54,7 +54,8 @@ function iterate(curScore, actions, logger)
 		if (cursor.tick == 0)
 		{
 			// If the selection includes the last note of the score, .rewind()
-			// overflows and goes back to tick 0.
+			// overflows and goes back to tick 0.  In this case, set the end
+			// tick manually to the last tick of the score.
 			endTick = curScore.lastSegment.tick;
 		}
 		else
@@ -74,7 +75,7 @@ function iterate(curScore, actions, logger)
 			
 			cursor.voice = voice;
 			cursor.staffIdx = staff;
-			cursor.rewindToTick(startTick);
+			cursor.rewind(Cursor.SELECTION_START);
 			
 			let previousKeySignature = null;
 			
