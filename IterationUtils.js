@@ -1,6 +1,6 @@
 /*
 	A collection of functions and constants for iterating over a score.
-	Copyright (C) 2024 Alessandro Culatti
+	Copyright (C) 2024 - 2025 Alessandro Culatti
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const VERSION = "1.0.2";
+const VERSION = "1.0.3";
 
 function iterate(curScore, actions, logger)
 {
