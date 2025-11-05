@@ -18,6 +18,32 @@
 
 const VERSION = "2.0.0";
 
+let loggerId = null;
+let logLevel = 3;
+let logLevels = [
+	"TRACE",
+	"INFO",
+	"WARNING",
+	"ERROR",
+	"FATAL",
+];
+let separator = "\t";
+
+/**
+ * Initialise the logger with input ID, and optionally with the input log level.
+ * Also initialise the log file path with the current date time.
+ */
+function initialise(id, level)
+{
+	loggerId = id;
+	loggerId.source = Qt.resolvedUrl(".").toString().substring(8) + "logs/" + getFileDateTime() + "_log.txt";
+	
+	if (level !== undefined)
+	{
+		logLevel = level;
+	}
+}
+
 /**
  * Return the current date time in a format compatible with file names.
  */
