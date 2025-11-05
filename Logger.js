@@ -17,3 +17,34 @@
 */
 
 const VERSION = "2.0.0";
+
+/**
+ * Return the current date time in a format compatible with file names.
+ */
+function getFileDateTime()
+{
+	var currentDate = new Date();
+	var year = currentDate.getFullYear();
+	var month = String(currentDate.getMonth() + 1).padStart(2, "0");
+	var day = String(currentDate.getDate()).padStart(2, "0");
+	var hours = String(currentDate.getHours()).padStart(2, "0");
+	var minutes = String(currentDate.getMinutes()).padStart(2, "0");
+	var seconds = String(currentDate.getSeconds()).padStart(2, "0");
+	return `${year}-${month}-${day}_${hours}-${minutes}-${seconds}`;
+}
+
+/**
+ * Return the current date time in the RFC3339 format.
+ */
+function getRFC3339DateTime()
+{
+	var currentDate = new Date();
+	var year = currentDate.getFullYear();
+	var month = String(currentDate.getMonth() + 1).padStart(2, "0");
+	var day = String(currentDate.getDate()).padStart(2, "0");
+	var hours = String(currentDate.getHours()).padStart(2, "0");
+	var minutes = String(currentDate.getMinutes()).padStart(2, "0");
+	var seconds = String(currentDate.getSeconds()).padStart(2, "0");
+	var milliseconds = String(currentDate.getMilliseconds()).padStart(3, "0");
+	return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
+}
