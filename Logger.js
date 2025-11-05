@@ -25,17 +25,19 @@ const INFO = 1;
 const WARNING = 2;
 const ERROR = 3;
 const FATAL = 4;
-let logLevel = ERROR;
-let logLevels = [
+let logLevelNames = [
 	"TRACE",
 	"INFO",
 	"WARNING",
 	"ERROR",
 	"FATAL",
 ];
+// Current log level.  Only messages with a level equal or greater than this
+// will be logged.
+let logLevel = ERROR;
 
-let logMessages = "";
-let separator = "\t";
+let logMessages = null;
+const separator = "\t";
 
 /**
  * Initialise the logger with input ID, and optionally with the input log level.
@@ -50,6 +52,8 @@ function initialise(id, level)
 	{
 		logLevel = level;
 	}
+	
+	logMessages = "";
 }
 
 /**
@@ -60,7 +64,7 @@ function log(message, level = INFO)
 {
 	if (level >= logLevel)
 	{
-		logMessages += `${getRFC3339DateTime()}${separator}${logLevels[level]}${separator}${message}\n`;
+		logMessages += `${getRFC3339DateTime()}${separator}${logLevelNames[level]}${separator}${message}\n`;
 	}
 }
 
