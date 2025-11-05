@@ -58,7 +58,7 @@ function initialise(id, level)
 
 /**
  * Log the input message with the specified log level, or INFO if no log level
- * was specified.
+ * is specified.
  */
 function log(message, level = INFO)
 {
@@ -110,6 +110,20 @@ function writeLogs()
 	{
 		loggerId.write(logMessages);
 	}
+}
+
+/**
+ * Log every property of the input object, with the specified level, or INFO if
+ * no log level is specified.
+ */
+function logProperties(obj, level = INFO)
+{
+	let s = "" + obj + ":";
+	for (let key in obj)
+	{
+		s += "\n\t" + key + ": " + obj[key];
+	}
+	log(s, level);
 }
 
 /**
