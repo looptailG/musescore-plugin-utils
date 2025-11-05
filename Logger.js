@@ -65,7 +65,40 @@ function log(message, level = INFO)
 }
 
 /**
- * Write the log messages to the log file.
+ * Log the input message with TRACE level.
+ */
+function trace(message)
+{
+	log(message, TRACE);
+}
+
+/**
+ * Log the input message with WARNING level.
+ */
+function warning(message)
+{
+	log(message, WARNING);
+}
+
+/**
+ * Log the input message with ERROR level.
+ */
+function err(message)
+{
+	log(message, ERROR);
+}
+
+/**
+ * Log the input message with FATAL level.
+ */
+function fatal(message)
+{
+	log(message, FATAL);
+}
+
+/**
+ * Write the log messages to the log file.  This should be called at the end of
+ * the plugin, to write the log messages, if any, to the log file.
  */
 function writeLogs()
 {
