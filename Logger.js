@@ -19,7 +19,13 @@
 const VERSION = "2.0.0";
 
 let loggerId = null;
-let logLevel = 3;
+
+const TRACE = 0;
+const INFO = 1;
+const WARNING = 2;
+const ERROR = 3;
+const FATAL = 4;
+let logLevel = ERROR;
 let logLevels = [
 	"TRACE",
 	"INFO",
@@ -27,6 +33,8 @@ let logLevels = [
 	"ERROR",
 	"FATAL",
 ];
+
+let logMessages = "";
 let separator = "\t";
 
 /**
@@ -41,6 +49,29 @@ function initialise(id, level)
 	if (level !== undefined)
 	{
 		logLevel = level;
+	}
+}
+
+/**
+ * Log the input message with the specified log level, or INFO if no log level
+ * was specified.
+ */
+function log(message, level = INFO)
+{
+	if (level >= logLevel)
+	{
+		logMessages += `${getRFC3339DateTime()}${separator}${logLevels[level]}${separator}${message}\n`;
+	}
+}
+
+/**
+ * Write the log messages to the log file.
+ */
+function writeLogs()
+{
+	if (logMessages)
+	{
+		loggerId.write(logMessages);
 	}
 }
 
