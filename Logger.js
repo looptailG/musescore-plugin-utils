@@ -132,7 +132,6 @@ function getCurrentFolderPath()
 	let path = Qt.resolvedUrl(".").toString();
 	// The path we obtained has the prefix "file:///", remove it.
 	return path.substring("file:///".length);
-	
 }
 
 /**
