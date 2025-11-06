@@ -34,7 +34,7 @@ let logLevelNames = [
 ];
 // Current log level.  Only messages with a level equal or greater than this
 // will be logged.
-let logLevel = ERROR;
+let logLevel = null;
 
 let logMessages = null;
 const separator = "\t";
@@ -43,16 +43,12 @@ const separator = "\t";
  * Initialise the logger with input ID, and optionally with the input log level.
  * Also initialise the log file path with the current date time.
  */
-function initialise(id, level)
+function initialise(id, level = ERROR)
 {
 	loggerId = id;
 	loggerId.source = Qt.resolvedUrl(".").toString().substring(8) + "logs/" + getFileDateTime() + "_log.txt";
 	
-	if (level !== undefined)
-	{
-		logLevel = level;
-	}
-	
+	logLevel = level;
 	logMessages = "";
 }
 
