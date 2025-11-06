@@ -41,12 +41,14 @@ const separator = "\t";
 
 /**
  * Initialise the logger with input ID, and optionally with the input log level.
- * Also initialise the log file path with the current date time.
+ * Also initialise the log file path with the current date time, and to be in
+ * the specified folder.  The folder must already exist, this library does not
+ * create it if it's missing.
  */
-function initialise(id, level = ERROR)
+function initialise(id, level = ERROR, folderPath = "logs")
 {
 	loggerId = id;
-	loggerId.source = getCurrentFolderPath() + "logs/" + getFileDateTime() + "_log.txt";
+	loggerId.source = getCurrentFolderPath() + folderPath + "/" + getFileDateTime() + "_log.txt";
 	
 	logLevel = level;
 	logMessages = "";
