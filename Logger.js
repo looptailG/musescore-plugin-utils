@@ -46,7 +46,7 @@ const separator = "\t";
 function initialise(id, level = ERROR)
 {
 	loggerId = id;
-	loggerId.source = Qt.resolvedUrl(".").toString().substring(8) + "logs/" + getFileDateTime() + "_log.txt";
+	loggerId.source = getCurrentFolderPath() + "logs/" + getFileDateTime() + "_log.txt";
 	
 	logLevel = level;
 	logMessages = "";
@@ -123,17 +123,28 @@ function logProperties(obj, level = INFO)
 }
 
 /**
+ * Return the path of the current folder.
+ */
+function getCurrentFolderPath()
+{
+	let path = Qt.resolvedUrl(".").toString();
+	// The path we obtained has the prefix "file:///", remove it.
+	return path.substring("file:///".length);
+	
+}
+
+/**
  * Return the current date time in a format compatible with file names.
  */
 function getFileDateTime()
 {
-	var currentDate = new Date();
-	var year = currentDate.getFullYear();
-	var month = String(currentDate.getMonth() + 1).padStart(2, "0");
-	var day = String(currentDate.getDate()).padStart(2, "0");
-	var hours = String(currentDate.getHours()).padStart(2, "0");
-	var minutes = String(currentDate.getMinutes()).padStart(2, "0");
-	var seconds = String(currentDate.getSeconds()).padStart(2, "0");
+	let currentDate = new Date();
+	let year = currentDate.getFullYear();
+	let month = String(currentDate.getMonth() + 1).padStart(2, "0");
+	let day = String(currentDate.getDate()).padStart(2, "0");
+	let hours = String(currentDate.getHours()).padStart(2, "0");
+	let minutes = String(currentDate.getMinutes()).padStart(2, "0");
+	let seconds = String(currentDate.getSeconds()).padStart(2, "0");
 	return `${year}-${month}-${day}_${hours}-${minutes}-${seconds}`;
 }
 
@@ -142,13 +153,13 @@ function getFileDateTime()
  */
 function getRFC3339DateTime()
 {
-	var currentDate = new Date();
-	var year = currentDate.getFullYear();
-	var month = String(currentDate.getMonth() + 1).padStart(2, "0");
-	var day = String(currentDate.getDate()).padStart(2, "0");
-	var hours = String(currentDate.getHours()).padStart(2, "0");
-	var minutes = String(currentDate.getMinutes()).padStart(2, "0");
-	var seconds = String(currentDate.getSeconds()).padStart(2, "0");
-	var milliseconds = String(currentDate.getMilliseconds()).padStart(3, "0");
+	let currentDate = new Date();
+	let year = currentDate.getFullYear();
+	let month = String(currentDate.getMonth() + 1).padStart(2, "0");
+	let day = String(currentDate.getDate()).padStart(2, "0");
+	let hours = String(currentDate.getHours()).padStart(2, "0");
+	let minutes = String(currentDate.getMinutes()).padStart(2, "0");
+	let seconds = String(currentDate.getSeconds()).padStart(2, "0");
+	let milliseconds = String(currentDate.getMilliseconds()).padStart(3, "0");
 	return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
 }
