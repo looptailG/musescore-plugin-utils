@@ -25,7 +25,7 @@ const INFO = 1;
 const WARNING = 2;
 const ERROR = 3;
 const FATAL = 4;
-let LOG_LEVEL_NAMES = [
+const LOG_LEVEL_NAMES = [
 	"TRACE",
 	"INFO",
 	"WARNING",
