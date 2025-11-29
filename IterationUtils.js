@@ -16,9 +16,9 @@
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const VERSION = "1.0.3";
+const VERSION = "1.1.0";
 
-function iterate(curScore, actions, logger)
+function iterate(curScore, actions, logger = null)
 {
 	let onStaffStart = actions.onStaffStart || null;
 	let onNewMeasure = actions.onNewMeasure || null;
@@ -38,7 +38,10 @@ function iterate(curScore, actions, logger)
 	cursor.rewind(Cursor.SELECTION_START);
 	if (!cursor.segment)
 	{
-		logger.log("Iterating on the entire score.");
+		if (logger)
+		{
+			logger.log("Iterating on the entire score.");
+		}
 		startStaff = 0;
 		endStaff = curScore.nstaves - 1;
 		startTick = 0;
@@ -46,7 +49,10 @@ function iterate(curScore, actions, logger)
 	}
 	else
 	{
-		logger.log("Iterating only on the current selection.");
+		if (logger)
+		{
+			logger.log("Iterating only on the current selection.");
+		}
 		startStaff = cursor.staffIdx;
 		startTick = cursor.tick;
 		cursor.rewind(Cursor.SELECTION_END);
@@ -62,8 +68,11 @@ function iterate(curScore, actions, logger)
 		{
 			endTick = cursor.tick;
 		}
-		logger.trace("Iterating only on ticks: " + startTick + " - " + endTick);
-		logger.trace("Iterating only on staffs: " + startStaff + " - " + endStaff);
+		if (logger)
+		{
+			logger.trace("Iterating only on ticks: " + startTick + " - " + endTick);
+			logger.trace("Iterating only on staffs: " + startStaff + " - " + endStaff);
+		}
 	}
 	
 	// Iterate on the score.
@@ -71,14 +80,17 @@ function iterate(curScore, actions, logger)
 	{
 		for (let voice = 0; voice < 4; voice++)
 		{
-			logger.log("Staff: " + staff + "; Voice: " + voice);
+			if (logger)
+			{
+				logger.log("Staff: " + staff + "; Voice: " + voice);
+			}
 			
 			cursor.voice = voice;
 			cursor.staffIdx = staff;
 			if (startTick == 0)
 			{
 				// This is necessary in case nothing is selected before running
-				// the plugin, in which case SELECTION_START is not valorised.
+				// the plugin, in which case SELECTION_START is not defined.
 				cursor.rewind(Cursor.SCORE_START);
 			}
 			else
