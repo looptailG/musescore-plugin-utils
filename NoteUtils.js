@@ -1,6 +1,6 @@
 /*
 	A collection of functions and constants about notes.
-	Copyright (C) 2024 Alessandro Culatti
+	Copyright (C) 2024 - 2026 Alessandro Culatti
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const VERSION = "1.1.0";
+const VERSION = "1.2.0";
 
 const SEMITONE_MAP = {
 	"C": 0,
@@ -70,6 +70,157 @@ function getNoteLetter(note, tpcMode = "tpc1")
 function getOctave(note)
 {
 	return Math.floor(note.pitch / 12) - 1;
+}
+
+/**
+ * Return the TPC for the input note name and accidental.
+ */
+function noteNameToTpc(noteName, accidental)
+{
+	let tpc;
+	switch (noteName)
+	{
+		case "C":
+			tpc = 14;
+			break;
+		
+		case "D":
+			tpc = 16;
+			break;
+			
+		case "E":
+			tpc = 18;
+			break;
+			
+		case "F":
+			tpc = 13;
+			break;
+		
+		case "G":
+			tpc = 15;
+			break
+		
+		case "A":
+			tpc = 17;
+			break;
+		
+		case "B":
+			tpc = 19;
+			break;
+		
+		default:
+			throw "Invalid note name: " + noteName;
+	}
+	switch (accidental)
+	{
+		case "FLAT3":
+			tpc -= 21;
+			break;
+		
+		case "FLAT2":
+			tpc -= 14;
+			break;
+		
+		case "FLAT":
+			tpc -= 7;
+			break;
+		
+		case "NONE":
+		case "NATURAL":
+			break;
+		
+		case "SHARP":
+			tpc += 7;
+			break;
+		
+		case "SHARP2":
+			tpc += 14;
+			break;
+		
+		case "SHARP3":
+			tpc += 21;
+			break;
+		
+		default:
+			throw "Invalid accidental: " + accidental;
+	}
+	return tpc;
+}
+
+/**
+ * Return the midi number for the input note.
+ */
+function noteToMidiNumber(noteName, accidental, octave)
+{
+	let midiNumber;
+	switch (noteName)
+	{
+		case "C":
+			midiNumber = 12;
+			break;
+		
+		case "D":
+			midiNumber = 14;
+			break;
+		
+		case "E":
+			midiNumber = 16;
+			break;
+		
+		case "F":
+			midiNumber = 17;
+			break;
+		
+		case "G":
+			midiNumber = 19;
+			break;
+		
+		case "A":
+			midiNumber = 21;
+			break;
+		
+		case "B":
+			midiNumber = 23;
+			break;
+		
+		default:
+			throw "Invalid note name: " + noteName;
+	}
+	switch (accidental)
+	{
+		case "FLAT3":
+			midiNumber -= 3;
+			break;
+		
+		case "FLAT2":
+			midiNumber -= 2;
+			break;
+		
+		case "FLAT":
+			midiNumber -= 1;
+			break;
+		
+		case "NONE":
+		case "NATURAL":
+			break;
+		
+		case "SHARP":
+			midiNumber += 1;
+			break;
+		
+		case "SHARP2":
+			midiNumber += 2;
+			break;
+		
+		case "SHARP3":
+			midiNumber += 3;
+			break;
+		
+		default:
+			throw "Invalid accidental: " + accidental;
+	}
+	midiNumber += 12 * octave;
+	return midiNumber;
 }
 
 /**
