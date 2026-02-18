@@ -217,7 +217,7 @@ function noteToMidiNumber(noteName, accidental, octave)
 			break;
 		
 		default:
-			throw "Invalid accidental: " += accidental;
+			throw "Invalid accidental: " + accidental;
 	}
 	midiNumber += 12 * octave;
 	return midiNumber;
