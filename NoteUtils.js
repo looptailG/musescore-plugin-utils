@@ -142,7 +142,7 @@ function noteNameToTpc(noteName, accidental)
 			break;
 		
 		default:
-			throw "Invalid accidental: " += accidental;
+			throw "Invalid accidental: " + accidental;
 	}
 	return tpc;
 }
