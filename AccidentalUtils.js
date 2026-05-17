@@ -16,7 +16,21 @@
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const VERSION = "1.1.0";
+const VERSION = "1.2.0";
+
+const UNICODE_ACCIDENTALS = {
+	"FLAT": "\uE260",
+	"NATURAL": "\uE261",
+	"SHARP": "\uE262",
+	"SHARP2": "\uE263",
+	"FLAT2": "\uE264",
+	"SHARP3": "\uE265",
+	"FLAT3": "\uE266",
+	"MIRRORED_FLAT": "\uE280",
+	"MIRRORED_FLAT2": "\uE281",
+	"SHARP_SLASH": "\uE282",
+	"SHARP_SLASH4": "\uE283"
+};
 
 const ACCIDENTAL_DATA = {
 	"NONE":
