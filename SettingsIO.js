@@ -53,7 +53,7 @@ function writeTsvFile(settings, fileIO, keyColumnName = "KEY", valueColumnName =
 	let fileContent;
 	if (keyColumnName && valueColumnName)
 	{
-		fileContent = keyColumn + "\t" + valueColumn + "\n";
+		fileContent = keyColumnName + "\t" + valueColumnName + "\n";
 	}
 	else
 	{
