@@ -1,6 +1,6 @@
 /*
 	A collection of functions and constants for iterating over a score.
-	Copyright (C) 2024 - 2025 Alessandro Culatti
+	Copyright (C) 2024 - 2026 Alessandro Culatti
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -16,20 +16,22 @@
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const VERSION = "1.0.3";
+const VERSION = "1.1.0";
 
 function iterate(curScore, actions, logger)
 {
 	let onStaffStart = actions.onStaffStart || null;
 	let onNewMeasure = actions.onNewMeasure || null;
+	let onClef = actions.onClef || null;
 	let onKeySignatureChange = actions.onKeySignatureChange || null;
 	let onAnnotation = actions.onAnnotation || null;
-	let staffTextOnCurrentStaffOnly = actions.staffTextOnCurrentStaffOnly || true;
+	let staffTextOnCurrentStaffOnly = (actions.staffTextOnCurrentStaffOnly !== undefined)
+		? actions.staffTextOnCurrentStaffOnly : true;
 	let onNote = actions.onNote || null;
-	
+
 	curScore.startCmd();
 	let cursor = curScore.newCursor();
-	
+
 	// Calculate the portion of the score to iterate on.
 	let startStaff;
 	let endStaff;
@@ -65,34 +67,36 @@ function iterate(curScore, actions, logger)
 		logger.trace("Iterating only on ticks: " + startTick + " - " + endTick);
 		logger.trace("Iterating only on staffs: " + startStaff + " - " + endStaff);
 	}
-	
+
 	// Iterate on the score.
 	for (let staff = startStaff; staff <= endStaff; staff++)
 	{
 		for (let voice = 0; voice < 4; voice++)
 		{
 			logger.log("Staff: " + staff + "; Voice: " + voice);
-			
+
 			cursor.voice = voice;
 			cursor.staffIdx = staff;
-			if (startTick == 0)
+			cursor.filter = Segment.All;
+
+			let previousKeySignature = null;
+
+			if (onStaffStart)
+			{
+				onStaffStart();
+			}
+
+			if (startTick === 0)
 			{
 				// This is necessary in case nothing is selected before running
-				// the plugin, in which case SELECTION_START is not valorised.
+				// the plugin, in which case SELECTION_START is not initialised.
 				cursor.rewind(Cursor.SCORE_START);
 			}
 			else
 			{
 				cursor.rewind(Cursor.SELECTION_START);
 			}
-			
-			let previousKeySignature = null;
-			
-			if (onStaffStart)
-			{
-				onStaffStart();
-			}
-			
+
 			// Loop on the elements of the current staff.
 			while (cursor.segment && (cursor.tick <= endTick))
 			{
@@ -103,7 +107,15 @@ function iterate(curScore, actions, logger)
 						onNewMeasure();
 					}
 				}
-				
+
+				if (onClef)
+				{
+					if (cursor.element && (cursor.element.type === Element.CLEF))
+					{
+						onClef(cursor.element);
+					}
+				}
+
 				if (onKeySignatureChange)
 				{
 					if (cursor.keySignature != previousKeySignature)
@@ -112,7 +124,7 @@ function iterate(curScore, actions, logger)
 					}
 					previousKeySignature = cursor.keySignature;
 				}
-				
+
 				if (onAnnotation)
 				{
 					for (let i = 0; i < cursor.segment.annotations.length; i++)
@@ -130,14 +142,14 @@ function iterate(curScore, actions, logger)
 								continue;
 							}
 						}
-						
+
 						if (annotation.text)
 						{
 							onAnnotation(annotation);
 						}
 					}
 				}
-				
+
 				if (onNote)
 				{
 					if (cursor.element && (cursor.element.type === Element.CHORD))
@@ -151,7 +163,7 @@ function iterate(curScore, actions, logger)
 								onNote(notes[j]);
 							}
 						}
-						
+
 						let notes = cursor.element.notes;
 						for (let i = 0; i < notes.length; i++)
 						{
@@ -159,11 +171,11 @@ function iterate(curScore, actions, logger)
 						}
 					}
 				}
-				
+
 				cursor.next();
 			}
 		}
 	}
-	
+
 	curScore.endCmd();
 }
