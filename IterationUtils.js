@@ -24,7 +24,8 @@ function iterate(curScore, actions, logger)
 	let onStaffStart = actions.onStaffStart || null;
 	let onNewMeasure = actions.onNewMeasure || null;
 	let onClef = actions.onClef || null;
-	let onKeySignatureChange = actions.onKeySignatureChange || null;
+	let onKeySignature = actions.onKeySignature || null;
+	let onTimeSignature = actions.onTimeSignature || null;
 	let onAnnotation = actions.onAnnotation || null;
 	let staffTextOnCurrentStaffOnly = (actions.staffTextOnCurrentStaffOnly !== undefined)
 		? actions.staffTextOnCurrentStaffOnly : true;
@@ -126,13 +127,21 @@ function iterate(curScore, actions, logger)
 					}
 				}
 
-				if (onKeySignatureChange)
+				if (onKeySignature)
 				{
 					if (cursor.keySignature != previousKeySignature)
 					{
-						onKeySignatureChange(cursor.keySignature);
+						onKeySignature(cursor.keySignature);
 					}
 					previousKeySignature = cursor.keySignature;
+				}
+
+				if (onTimeSignature)
+				{
+					if (cursor.element && (cursor.element.type === Element.TIMESIG))
+					{
+						onTimeSignature(cursor.element);
+					}
 				}
 
 				if (onAnnotation)
