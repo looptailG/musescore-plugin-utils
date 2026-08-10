@@ -90,8 +90,6 @@ function iterate(curScore, actions, logger)
 			cursor.staffIdx = staff;
 			cursor.filter = Segment.All;
 
-			let previousKeySignature = null;
-
 			if (onStaffStart)
 			{
 				onStaffStart();
@@ -129,11 +127,10 @@ function iterate(curScore, actions, logger)
 
 				if (onKeySignature)
 				{
-					if (cursor.keySignature != previousKeySignature)
+					if (cursor.element && (cursor.element.type === Element.KEYSIG))
 					{
-						onKeySignature(cursor.keySignature);
+						onKeySignature(cursor.element);
 					}
-					previousKeySignature = cursor.keySignature;
 				}
 
 				if (onTimeSignature)
