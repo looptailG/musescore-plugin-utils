@@ -1,4 +1,4 @@
-/*
+﻿/*
 	A collection of functions and constants for iterating over a score.
 	Copyright (C) 2024 - 2026 Alessandro Culatti
 
@@ -20,6 +20,7 @@ const VERSION = "1.1.0";
 
 function iterate(curScore, actions, logger)
 {
+	let voicesFilter = actions.voicesFilter || null;
 	let onStaffStart = actions.onStaffStart || null;
 	let onNewMeasure = actions.onNewMeasure || null;
 	let onClef = actions.onClef || null;
@@ -73,6 +74,15 @@ function iterate(curScore, actions, logger)
 	{
 		for (let voice = 0; voice < 4; voice++)
 		{
+			if (voicesFilter)
+			{
+				if (!voicesFilter.includes(voice))
+				{
+					logger.trace("Skipping voice: " + voice);
+					continue;
+				}
+			}
+
 			logger.log("Staff: " + staff + "; Voice: " + voice);
 
 			cursor.voice = voice;
