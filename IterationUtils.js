@@ -30,6 +30,7 @@ function iterate(curScore, actions, logger)
 	let staffTextOnCurrentStaffOnly = (actions.staffTextOnCurrentStaffOnly !== undefined)
 		? actions.staffTextOnCurrentStaffOnly : true;
 	let onNote = actions.onNote || null;
+	let onBarLine = actions.onBarLine || null;
 
 	curScore.startCmd();
 	let cursor = curScore.newCursor();
@@ -185,6 +186,14 @@ function iterate(curScore, actions, logger)
 						{
 							onNote(notes[i]);
 						}
+					}
+				}
+
+				if (onBarLine)
+				{
+					if (cursor.element && (cursor.element.type === Element.BAR_LINE))
+					{
+						onBarLine(cursor.element);
 					}
 				}
 
