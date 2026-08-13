@@ -1,6 +1,6 @@
-/*
+﻿/*
 	A collection of functions and constants for iterating over a score.
-	Copyright (C) 2024 - 2025 Alessandro Culatti
+	Copyright (C) 2024 - 2026 Alessandro Culatti
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -16,20 +16,26 @@
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const VERSION = "1.0.3";
+const VERSION = "1.1.0";
 
 function iterate(curScore, actions, logger)
 {
+	let voicesFilter = actions.voicesFilter || null;
 	let onStaffStart = actions.onStaffStart || null;
 	let onNewMeasure = actions.onNewMeasure || null;
-	let onKeySignatureChange = actions.onKeySignatureChange || null;
+	let onClef = actions.onClef || null;
+	let onKeySignature = actions.onKeySignature || null;
+	let onTimeSignature = actions.onTimeSignature || null;
 	let onAnnotation = actions.onAnnotation || null;
-	let staffTextOnCurrentStaffOnly = actions.staffTextOnCurrentStaffOnly || true;
+	let staffTextOnCurrentStaffOnly = (actions.staffTextOnCurrentStaffOnly !== undefined)
+		? actions.staffTextOnCurrentStaffOnly : true;
+	let onChord = actions.onChord || null;
 	let onNote = actions.onNote || null;
-	
+	let onBarLine = actions.onBarLine || null;
+
 	curScore.startCmd();
 	let cursor = curScore.newCursor();
-	
+
 	// Calculate the portion of the score to iterate on.
 	let startStaff;
 	let endStaff;
@@ -65,34 +71,43 @@ function iterate(curScore, actions, logger)
 		logger.trace("Iterating only on ticks: " + startTick + " - " + endTick);
 		logger.trace("Iterating only on staffs: " + startStaff + " - " + endStaff);
 	}
-	
+
 	// Iterate on the score.
 	for (let staff = startStaff; staff <= endStaff; staff++)
 	{
 		for (let voice = 0; voice < 4; voice++)
 		{
+			if (voicesFilter)
+			{
+				if (!voicesFilter.includes(voice))
+				{
+					logger.trace("Skipping voice: " + voice);
+					continue;
+				}
+			}
+
 			logger.log("Staff: " + staff + "; Voice: " + voice);
-			
+
 			cursor.voice = voice;
 			cursor.staffIdx = staff;
-			if (startTick == 0)
+			cursor.filter = Segment.All;
+
+			if (onStaffStart)
+			{
+				onStaffStart();
+			}
+
+			if (startTick === 0)
 			{
 				// This is necessary in case nothing is selected before running
-				// the plugin, in which case SELECTION_START is not valorised.
+				// the plugin, in which case SELECTION_START is not initialised.
 				cursor.rewind(Cursor.SCORE_START);
 			}
 			else
 			{
 				cursor.rewind(Cursor.SELECTION_START);
 			}
-			
-			let previousKeySignature = null;
-			
-			if (onStaffStart)
-			{
-				onStaffStart();
-			}
-			
+
 			// Loop on the elements of the current staff.
 			while (cursor.segment && (cursor.tick <= endTick))
 			{
@@ -103,16 +118,31 @@ function iterate(curScore, actions, logger)
 						onNewMeasure();
 					}
 				}
-				
-				if (onKeySignatureChange)
+
+				if (onClef)
 				{
-					if (cursor.keySignature != previousKeySignature)
+					if (cursor.element && (cursor.element.type === Element.CLEF))
 					{
-						onKeySignatureChange(cursor.keySignature);
+						onClef(cursor.element);
 					}
-					previousKeySignature = cursor.keySignature;
 				}
-				
+
+				if (onKeySignature)
+				{
+					if (cursor.element && (cursor.element.type === Element.KEYSIG))
+					{
+						onKeySignature(cursor.element);
+					}
+				}
+
+				if (onTimeSignature)
+				{
+					if (cursor.element && (cursor.element.type === Element.TIMESIG))
+					{
+						onTimeSignature(cursor.element);
+					}
+				}
+
 				if (onAnnotation)
 				{
 					for (let i = 0; i < cursor.segment.annotations.length; i++)
@@ -130,40 +160,53 @@ function iterate(curScore, actions, logger)
 								continue;
 							}
 						}
-						
-						if (annotation.text)
-						{
-							onAnnotation(annotation);
-						}
+
+						onAnnotation(annotation);
 					}
 				}
-				
-				if (onNote)
+
+				if (onChord || onNote)
 				{
 					if (cursor.element && (cursor.element.type === Element.CHORD))
 					{
-						let graceChords = cursor.element.graceNotes;
-						for (let i = 0; i < graceChords.length; i++)
+						if (onChord)
 						{
-							let notes = graceChords[i].notes;
-							for (let j = 0; j < notes.length; j++)
-							{
-								onNote(notes[j]);
-							}
+							onChord(cursor.element);
 						}
-						
-						let notes = cursor.element.notes;
-						for (let i = 0; i < notes.length; i++)
+
+						if (onNote)
 						{
-							onNote(notes[i]);
+							let graceChords = cursor.element.graceNotes;
+							for (let i = 0; i < graceChords.length; i++)
+							{
+								let notes = graceChords[i].notes;
+								for (let j = 0; j < notes.length; j++)
+								{
+									onNote(notes[j]);
+								}
+							}
+
+							let notes = cursor.element.notes;
+							for (let i = 0; i < notes.length; i++)
+							{
+								onNote(notes[i]);
+							}
 						}
 					}
 				}
-				
+
+				if (onBarLine)
+				{
+					if (cursor.element && (cursor.element.type === Element.BAR_LINE))
+					{
+						onBarLine(cursor.element);
+					}
+				}
+
 				cursor.next();
 			}
 		}
 	}
-	
+
 	curScore.endCmd();
 }
