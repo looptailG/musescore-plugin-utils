@@ -16,7 +16,7 @@
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const VERSION = "1.2.0";
+const VERSION = "1.2.1";
 
 const SEMITONE_MAP = {
 	"C": 0,
@@ -67,9 +67,47 @@ function getNoteLetter(note, tpcMode = "tpc1")
 /**
  * Return the octave of the input note.
  */
-function getOctave(note)
+function getOctave(note, tpcMode = "tpc")
 {
-	return Math.floor(note.pitch / 12) - 1;
+	let pitch = note.pitch;
+	// It's psossible that notes with accidentals end up in the wrong octave, 
+	// for example a B# count as being in the octave of the C immediately above.
+	// Undo the shift due to the accidentals to get the actual octave of the 
+	// input note.
+	let tpc = note[tpcMode];
+	if ((-8 <= tpc) && (tpc <= -2))
+	{
+		pitch += 3;
+	}
+	else if ((-1 <= tpc) && (tpc <= 5))
+	{
+		pitch += 2;
+	}
+	else if ((6 <= tpc) && (tpc <= 12))
+	{
+		pitch += 1;
+	}
+	else if ((13 <= tpc) && (tpc <= 19))
+	{
+		// No action is necessary for notes without accidentals.
+	}
+	else if ((20 <= tpc) && (tpc <= 26))
+	{
+		pitch -= 1;
+	}
+	else if ((27 <= tpc) && (tpc <= 33))
+	{
+		pitch -= 2;
+	}
+	else if ((34 <= tpc) && (tpc <= 40))
+	{
+		pitch -= 3;
+	}
+	else
+	{
+		throw "Invalid tonal pitch class: " + tpc;
+	}
+	return Math.floor(pitch / 12) - 1;
 }
 
 /**
@@ -228,14 +266,14 @@ function noteToMidiNumber(noteName, accidental, octave)
  */
 function getAsciiAccidental(note, tpcMode = "tpc1")
 {
-	var tpc = note[tpcMode];
+	let tpc = note[tpcMode];
 	if ((-1 <= tpc) && (tpc <= 5))
 	{
 		return "bb";
 	}
 	else if ((6 <= tpc) && (tpc <= 12))
 	{
-		return "b"
+		return "b";
 	}
 	else if ((13 <= tpc) && (tpc <= 19))
 	{
