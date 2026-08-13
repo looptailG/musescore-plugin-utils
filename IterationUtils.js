@@ -161,10 +161,7 @@ function iterate(curScore, actions, logger)
 							}
 						}
 
-						if (annotation.text)
-						{
-							onAnnotation(annotation);
-						}
+						onAnnotation(annotation);
 					}
 				}
 
