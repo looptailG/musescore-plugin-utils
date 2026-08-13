@@ -29,6 +29,7 @@ function iterate(curScore, actions, logger)
 	let onAnnotation = actions.onAnnotation || null;
 	let staffTextOnCurrentStaffOnly = (actions.staffTextOnCurrentStaffOnly !== undefined)
 		? actions.staffTextOnCurrentStaffOnly : true;
+	let onChord = actions.onChord || null;
 	let onNote = actions.onNote || null;
 	let onBarLine = actions.onBarLine || null;
 
@@ -167,24 +168,32 @@ function iterate(curScore, actions, logger)
 					}
 				}
 
-				if (onNote)
+				if (onChord || onNote)
 				{
 					if (cursor.element && (cursor.element.type === Element.CHORD))
 					{
-						let graceChords = cursor.element.graceNotes;
-						for (let i = 0; i < graceChords.length; i++)
+						if (onChord)
 						{
-							let notes = graceChords[i].notes;
-							for (let j = 0; j < notes.length; j++)
-							{
-								onNote(notes[j]);
-							}
+							onChord(cursor.element);
 						}
 
-						let notes = cursor.element.notes;
-						for (let i = 0; i < notes.length; i++)
+						if (onNote)
 						{
-							onNote(notes[i]);
+							let graceChords = cursor.element.graceNotes;
+							for (let i = 0; i < graceChords.length; i++)
+							{
+								let notes = graceChords[i].notes;
+								for (let j = 0; j < notes.length; j++)
+								{
+									onNote(notes[j]);
+								}
+							}
+
+							let notes = cursor.element.notes;
+							for (let i = 0; i < notes.length; i++)
+							{
+								onNote(notes[i]);
+							}
 						}
 					}
 				}
