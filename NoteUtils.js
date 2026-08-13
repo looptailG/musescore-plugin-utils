@@ -37,27 +37,27 @@ function getNoteLetter(note, tpcMode = "tpc1")
 	{
 		case 0:
 			return "C";
-		
+
 		case 2:
 		case -5:
 			return "D";
-		
+
 		case 4:
 		case -3:
 			return "E";
-		
+
 		case 6:
 		case -1:
 			return "F";
-		
+
 		case 1:
 		case -6:
 			return "G";
-		
+
 		case 3:
 		case -4:
 			return "A";
-		
+
 		case 5:
 		case -2:
 			return "B";
@@ -70,9 +70,9 @@ function getNoteLetter(note, tpcMode = "tpc1")
 function getOctave(note, tpcMode = "tpc")
 {
 	let pitch = note.pitch;
-	// It's psossible that notes with accidentals end up in the wrong octave, 
+	// It's psossible that notes with accidentals end up in the wrong octave,
 	// for example a B# count as being in the octave of the C immediately above.
-	// Undo the shift due to the accidentals to get the actual octave of the 
+	// Undo the shift due to the accidentals to get the actual octave of the
 	// input note.
 	let tpc = note[tpcMode];
 	if ((-8 <= tpc) && (tpc <= -2))
@@ -121,31 +121,31 @@ function noteNameToTpc(noteName, accidental)
 		case "C":
 			tpc = 14;
 			break;
-		
+
 		case "D":
 			tpc = 16;
 			break;
-			
+
 		case "E":
 			tpc = 18;
 			break;
-			
+
 		case "F":
 			tpc = 13;
 			break;
-		
+
 		case "G":
 			tpc = 15;
 			break
-		
+
 		case "A":
 			tpc = 17;
 			break;
-		
+
 		case "B":
 			tpc = 19;
 			break;
-		
+
 		default:
 			throw "Invalid note name: " + noteName;
 	}
@@ -154,31 +154,31 @@ function noteNameToTpc(noteName, accidental)
 		case "FLAT3":
 			tpc -= 21;
 			break;
-		
+
 		case "FLAT2":
 			tpc -= 14;
 			break;
-		
+
 		case "FLAT":
 			tpc -= 7;
 			break;
-		
+
 		case "NONE":
 		case "NATURAL":
 			break;
-		
+
 		case "SHARP":
 			tpc += 7;
 			break;
-		
+
 		case "SHARP2":
 			tpc += 14;
 			break;
-		
+
 		case "SHARP3":
 			tpc += 21;
 			break;
-		
+
 		default:
 			throw "Invalid accidental: " + accidental;
 	}
@@ -196,31 +196,31 @@ function noteToMidiNumber(noteName, accidental, octave)
 		case "C":
 			midiNumber = 12;
 			break;
-		
+
 		case "D":
 			midiNumber = 14;
 			break;
-		
+
 		case "E":
 			midiNumber = 16;
 			break;
-		
+
 		case "F":
 			midiNumber = 17;
 			break;
-		
+
 		case "G":
 			midiNumber = 19;
 			break;
-		
+
 		case "A":
 			midiNumber = 21;
 			break;
-		
+
 		case "B":
 			midiNumber = 23;
 			break;
-		
+
 		default:
 			throw "Invalid note name: " + noteName;
 	}
@@ -229,31 +229,31 @@ function noteToMidiNumber(noteName, accidental, octave)
 		case "FLAT3":
 			midiNumber -= 3;
 			break;
-		
+
 		case "FLAT2":
 			midiNumber -= 2;
 			break;
-		
+
 		case "FLAT":
 			midiNumber -= 1;
 			break;
-		
+
 		case "NONE":
 		case "NATURAL":
 			break;
-		
+
 		case "SHARP":
 			midiNumber += 1;
 			break;
-		
+
 		case "SHARP2":
 			midiNumber += 2;
 			break;
-		
+
 		case "SHARP3":
 			midiNumber += 3;
 			break;
-		
+
 		default:
 			throw "Invalid accidental: " + accidental;
 	}
@@ -305,7 +305,7 @@ function getSemitoneDistance(n1, n2)
 		{
 			throw "Invalid note name: " + note;
 		}
-		
+
 		const noteName = match[1];
 		const accidental = match[2] || "";
 		let semitone = SEMITONE_MAP[noteName];
@@ -314,29 +314,29 @@ function getSemitoneDistance(n1, n2)
 			case "bb":
 				semitone -= 2;
 				break;
-			
+
 			case "b":
 				semitone -= 1;
 				break;
-			
+
 			case "":
 				break;
-			
+
 			case "#":
 				semitone += 1;
 				break;
-			
+
 			case "x":
 				semitone += 2;
 				break;
-			
+
 			default:
 				throw "Invalid accidental: " + accidental;
 		}
-		
+
 		return (semitone + 12) % 12;
 	}
-	
+
 	const s1 = getSemitone(n1);
 	const s2 = getSemitone(n2);
 	return s1 - s2;
