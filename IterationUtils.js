@@ -31,7 +31,10 @@ function iterate(curScore, actions, logger)
 		? actions.staffTextOnCurrentStaffOnly : true;
 	let onChord = actions.onChord || null;
 	let onNote = actions.onNote || null;
+	let onRest = actions.onRest || null;
 	let onBarLine = actions.onBarLine || null;
+	let skipSystemStartBarLine = (actions.skipSystemStartBarLine !== undefined)
+		? actions.skipSystemStartBarLine : true;
 
 	curScore.startCmd();
 	let cursor = curScore.newCursor();
@@ -195,11 +198,29 @@ function iterate(curScore, actions, logger)
 					}
 				}
 
+				if (onRest)
+				{
+					if (cursor.element && (cursor.element.type === Element.REST))
+					{
+						onRest(cursor.element);
+					}
+				}
+
 				if (onBarLine)
 				{
 					if (cursor.element && (cursor.element.type === Element.BAR_LINE))
 					{
-						onBarLine(cursor.element);
+						if (skipSystemStartBarLine)
+						{
+							if (cursor.segment && (cursor.segment.segmentType !== Segment.BeginBarLine))
+							{
+								onBarLine(cursor.element);
+							}
+						}
+						else
+						{
+							onBarLine(cursor.element);
+						}
 					}
 				}
 
