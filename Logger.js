@@ -1,4 +1,4 @@
-/*
+﻿/*
 	A collection of functions for logging messages from a MuseScore plugin.
 	Copyright (C) 2024 - 2026 Alessandro Culatti
 
@@ -16,7 +16,7 @@
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const VERSION = "2.1.3";
+const VERSION = "2.1.4";
 
 let loggerId = null;
 
@@ -62,6 +62,10 @@ function log(message, level = INFO)
 {
 	if (level >= logLevel)
 	{
+		if (!message)
+		{
+			message = "";
+		}
 		logMessages +=
 			`${getRFC3339DateTime()}${SEPARATOR}${LOG_LEVEL_NAMES[level]}${SEPARATOR}${message.toString()}\n`;
 	}
