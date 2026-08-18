@@ -37,6 +37,7 @@ function iterate(curScore, actions, logger)
 		let onBarLine = actions.onBarLine || null;
 		let skipSystemStartBarLine = (actions.skipSystemStartBarLine !== undefined)
 			? actions.skipSystemStartBarLine : true;
+		let onLayoutBreak = actions.onLayoutBreak || null;
 
 		curScore.startCmd();
 		let cursor = curScore.newCursor();
@@ -64,8 +65,8 @@ function iterate(curScore, actions, logger)
 			endStaff = cursor.staffIdx;
 			if (cursor.tick == 0)
 			{
-				// If the selection includes the last note of the score, 
-				// .rewind() overflows and goes back to tick 0.  In this case, 
+				// If the selection includes the last note of the score,
+				// .rewind() overflows and goes back to tick 0.  In this case,
 				// set the end tick manually to the last tick of the score.
 				endTick = curScore.lastSegment.tick;
 			}
@@ -104,8 +105,8 @@ function iterate(curScore, actions, logger)
 
 				if (startTick === 0)
 				{
-					// This is necessary in case nothing is selected before 
-					// running the plugin, in which case SELECTION_START is not 
+					// This is necessary in case nothing is selected before
+					// running the plugin, in which case SELECTION_START is not
 					// initialised.
 					cursor.rewind(Cursor.SCORE_START);
 				}
@@ -114,14 +115,38 @@ function iterate(curScore, actions, logger)
 					cursor.rewind(Cursor.SELECTION_START);
 				}
 
+				// The first tick of the current measure.  Used to prevent
+				// duplicate calls to onNewMeasure() in case there are multiple
+				// elements on the first tick of a measure.
+				var measureStartTick = null;
+
 				// Loop on the elements of the current staff.
 				while (cursor.segment && (cursor.tick <= endTick))
 				{
-					if (onNewMeasure)
+					if (onNewMeasure || onLayoutBreak)
 					{
-						if (cursor.segment.tick === cursor.measure.firstSegment.tick)
-						{
-							onNewMeasure();
+						if (
+							(cursor.segment.tick !== measureStartTick)
+							&& (cursor.segment.tick === cursor.measure.firstSegment.tick)
+						) {
+							measureStartTick = cursor.measure.firstSegment.tick;
+
+							if (onNewMeasure)
+							{
+								onNewMeasure();
+							}
+
+							if (onLayoutBreak)
+							{
+								for (let e of cursor.measure.elements)
+								{
+									// TODO: improve this check.
+									if (e.name.toLowerCase() === "layoutbreak")
+									{
+										onLayoutBreak(e);
+									}
+								}
+							}
 						}
 					}
 
@@ -156,7 +181,7 @@ function iterate(curScore, actions, logger)
 							let annotation = cursor.segment.annotations[i];
 							if (staffTextOnCurrentStaffOnly && (annotation.type === Element.STAFF_TEXT))
 							{
-								// Call onAnnotation() only if the staff text is 
+								// Call onAnnotation() only if the staff text is
 								// for the current staff.
 								let annotationPart = annotation.staff.part;
 								if (!(
