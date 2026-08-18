@@ -16,218 +16,229 @@
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const VERSION = "1.1.0";
+const VERSION = "1.2.0";
 
 function iterate(curScore, actions, logger)
 {
-	let voicesFilter = actions.voicesFilter || null;
-	let onStaffStart = actions.onStaffStart || null;
-	let onNewMeasure = actions.onNewMeasure || null;
-	let onClef = actions.onClef || null;
-	let onKeySignature = actions.onKeySignature || null;
-	let onTimeSignature = actions.onTimeSignature || null;
-	let onAnnotation = actions.onAnnotation || null;
-	let staffTextOnCurrentStaffOnly = (actions.staffTextOnCurrentStaffOnly !== undefined)
-		? actions.staffTextOnCurrentStaffOnly : true;
-	let onChord = actions.onChord || null;
-	let onNote = actions.onNote || null;
-	let onRest = actions.onRest || null;
-	let onBarLine = actions.onBarLine || null;
-	let skipSystemStartBarLine = (actions.skipSystemStartBarLine !== undefined)
-		? actions.skipSystemStartBarLine : true;
-
-	curScore.startCmd();
-	let cursor = curScore.newCursor();
-
-	// Calculate the portion of the score to iterate on.
-	let startStaff;
-	let endStaff;
-	let startTick;
-	let endTick;
-	cursor.rewind(Cursor.SELECTION_START);
-	if (!cursor.segment)
+	try
 	{
-		logger.log("Iterating on the entire score.");
-		startStaff = 0;
-		endStaff = curScore.nstaves - 1;
-		startTick = 0;
-		endTick = curScore.lastSegment.tick;
-	}
-	else
-	{
-		logger.log("Iterating only on the current selection.");
-		startStaff = cursor.staffIdx;
-		startTick = cursor.tick;
-		cursor.rewind(Cursor.SELECTION_END);
-		endStaff = cursor.staffIdx;
-		if (cursor.tick == 0)
+		let voicesFilter = actions.voicesFilter || null;
+		let onStaffStart = actions.onStaffStart || null;
+		let onNewMeasure = actions.onNewMeasure || null;
+		let onClef = actions.onClef || null;
+		let onKeySignature = actions.onKeySignature || null;
+		let onTimeSignature = actions.onTimeSignature || null;
+		let onAnnotation = actions.onAnnotation || null;
+		let staffTextOnCurrentStaffOnly = (actions.staffTextOnCurrentStaffOnly !== undefined)
+			? actions.staffTextOnCurrentStaffOnly : true;
+		let onChord = actions.onChord || null;
+		let onNote = actions.onNote || null;
+		let onRest = actions.onRest || null;
+		let onBarLine = actions.onBarLine || null;
+		let skipSystemStartBarLine = (actions.skipSystemStartBarLine !== undefined)
+			? actions.skipSystemStartBarLine : true;
+
+		curScore.startCmd();
+		let cursor = curScore.newCursor();
+
+		// Calculate the portion of the score to iterate on.
+		let startStaff;
+		let endStaff;
+		let startTick;
+		let endTick;
+		cursor.rewind(Cursor.SELECTION_START);
+		if (!cursor.segment)
 		{
-			// If the selection includes the last note of the score, .rewind()
-			// overflows and goes back to tick 0.  In this case, set the end
-			// tick manually to the last tick of the score.
+			logger.log("Iterating on the entire score.");
+			startStaff = 0;
+			endStaff = curScore.nstaves - 1;
+			startTick = 0;
 			endTick = curScore.lastSegment.tick;
 		}
 		else
 		{
-			endTick = cursor.tick;
-		}
-		logger.trace("Iterating only on ticks: " + startTick + " - " + endTick);
-		logger.trace("Iterating only on staffs: " + startStaff + " - " + endStaff);
-	}
-
-	// Iterate on the score.
-	for (let staff = startStaff; staff <= endStaff; staff++)
-	{
-		for (let voice = 0; voice < 4; voice++)
-		{
-			if (voicesFilter)
+			logger.log("Iterating only on the current selection.");
+			startStaff = cursor.staffIdx;
+			startTick = cursor.tick;
+			cursor.rewind(Cursor.SELECTION_END);
+			endStaff = cursor.staffIdx;
+			if (cursor.tick == 0)
 			{
-				if (!voicesFilter.includes(voice))
-				{
-					logger.trace("Skipping voice: " + voice);
-					continue;
-				}
-			}
-
-			logger.log("Staff: " + staff + "; Voice: " + voice);
-
-			cursor.voice = voice;
-			cursor.staffIdx = staff;
-			cursor.filter = Segment.All;
-
-			if (onStaffStart)
-			{
-				onStaffStart();
-			}
-
-			if (startTick === 0)
-			{
-				// This is necessary in case nothing is selected before running
-				// the plugin, in which case SELECTION_START is not initialised.
-				cursor.rewind(Cursor.SCORE_START);
+				// If the selection includes the last note of the score, 
+				// .rewind() overflows and goes back to tick 0.  In this case, 
+				// set the end tick manually to the last tick of the score.
+				endTick = curScore.lastSegment.tick;
 			}
 			else
 			{
-				cursor.rewind(Cursor.SELECTION_START);
+				endTick = cursor.tick;
 			}
+			logger.trace("Iterating only on ticks: " + startTick + " - " + endTick);
+			logger.trace("Iterating only on staffs: " + startStaff + " - " + endStaff);
+		}
 
-			// Loop on the elements of the current staff.
-			while (cursor.segment && (cursor.tick <= endTick))
+		// Iterate on the score.
+		for (let staff = startStaff; staff <= endStaff; staff++)
+		{
+			for (let voice = 0; voice < 4; voice++)
 			{
-				if (onNewMeasure)
+				if (voicesFilter)
 				{
-					if (cursor.segment.tick === cursor.measure.firstSegment.tick)
+					if (!voicesFilter.includes(voice))
 					{
-						onNewMeasure();
+						logger.trace("Skipping voice: " + voice);
+						continue;
 					}
 				}
 
-				if (onClef)
+				logger.log("Staff: " + staff + "; Voice: " + voice);
+
+				cursor.voice = voice;
+				cursor.staffIdx = staff;
+				cursor.filter = Segment.All;
+
+				if (onStaffStart)
 				{
-					if (cursor.element && (cursor.element.type === Element.CLEF))
-					{
-						onClef(cursor.element);
-					}
+					onStaffStart();
 				}
 
-				if (onKeySignature)
+				if (startTick === 0)
 				{
-					if (cursor.element && (cursor.element.type === Element.KEYSIG))
-					{
-						onKeySignature(cursor.element);
-					}
+					// This is necessary in case nothing is selected before 
+					// running the plugin, in which case SELECTION_START is not 
+					// initialised.
+					cursor.rewind(Cursor.SCORE_START);
+				}
+				else
+				{
+					cursor.rewind(Cursor.SELECTION_START);
 				}
 
-				if (onTimeSignature)
+				// Loop on the elements of the current staff.
+				while (cursor.segment && (cursor.tick <= endTick))
 				{
-					if (cursor.element && (cursor.element.type === Element.TIMESIG))
+					if (onNewMeasure)
 					{
-						onTimeSignature(cursor.element);
-					}
-				}
-
-				if (onAnnotation)
-				{
-					for (let i = 0; i < cursor.segment.annotations.length; i++)
-					{
-						let annotation = cursor.segment.annotations[i];
-						if (staffTextOnCurrentStaffOnly && (annotation.type === Element.STAFF_TEXT))
+						if (cursor.segment.tick === cursor.measure.firstSegment.tick)
 						{
-							// Call onAnnotation() only if the staff text is for
-							// the current staff.
-							let annotationPart = annotation.staff.part;
-							if (!(
-								(4 * staff >= annotationPart.startTrack)
-								&& (4 * staff < annotationPart.endTrack)
-							)) {
-								continue;
-							}
+							onNewMeasure();
 						}
-
-						onAnnotation(annotation);
 					}
-				}
 
-				if (onChord || onNote)
-				{
-					if (cursor.element && (cursor.element.type === Element.CHORD))
+					if (onClef)
 					{
-						if (onChord)
+						if (cursor.element && (cursor.element.type === Element.CLEF))
 						{
-							onChord(cursor.element);
+							onClef(cursor.element);
 						}
+					}
 
-						if (onNote)
+					if (onKeySignature)
+					{
+						if (cursor.element && (cursor.element.type === Element.KEYSIG))
 						{
-							let graceChords = cursor.element.graceNotes;
-							for (let i = 0; i < graceChords.length; i++)
+							onKeySignature(cursor.element);
+						}
+					}
+
+					if (onTimeSignature)
+					{
+						if (cursor.element && (cursor.element.type === Element.TIMESIG))
+						{
+							onTimeSignature(cursor.element);
+						}
+					}
+
+					if (onAnnotation)
+					{
+						for (let i = 0; i < cursor.segment.annotations.length; i++)
+						{
+							let annotation = cursor.segment.annotations[i];
+							if (staffTextOnCurrentStaffOnly && (annotation.type === Element.STAFF_TEXT))
 							{
-								let notes = graceChords[i].notes;
-								for (let j = 0; j < notes.length; j++)
-								{
-									onNote(notes[j]);
+								// Call onAnnotation() only if the staff text is 
+								// for the current staff.
+								let annotationPart = annotation.staff.part;
+								if (!(
+									(4 * staff >= annotationPart.startTrack)
+									&& (4 * staff < annotationPart.endTrack)
+								)) {
+									continue;
 								}
 							}
 
-							let notes = cursor.element.notes;
-							for (let i = 0; i < notes.length; i++)
+							onAnnotation(annotation);
+						}
+					}
+
+					if (onChord || onNote)
+					{
+						if (cursor.element && (cursor.element.type === Element.CHORD))
+						{
+							if (onChord)
 							{
-								onNote(notes[i]);
+								onChord(cursor.element);
+							}
+
+							if (onNote)
+							{
+								let graceChords = cursor.element.graceNotes;
+								for (let i = 0; i < graceChords.length; i++)
+								{
+									let notes = graceChords[i].notes;
+									for (let j = 0; j < notes.length; j++)
+									{
+										onNote(notes[j]);
+									}
+								}
+
+								let notes = cursor.element.notes;
+								for (let i = 0; i < notes.length; i++)
+								{
+									onNote(notes[i]);
+								}
 							}
 						}
 					}
-				}
 
-				if (onRest)
-				{
-					if (cursor.element && (cursor.element.type === Element.REST))
+					if (onRest)
 					{
-						onRest(cursor.element);
-					}
-				}
-
-				if (onBarLine)
-				{
-					if (cursor.element && (cursor.element.type === Element.BAR_LINE))
-					{
-						if (skipSystemStartBarLine)
+						if (cursor.element && (cursor.element.type === Element.REST))
 						{
-							if (cursor.segment && (cursor.segment.segmentType !== Segment.BeginBarLine))
+							onRest(cursor.element);
+						}
+					}
+
+					if (onBarLine)
+					{
+						if (cursor.element && (cursor.element.type === Element.BAR_LINE))
+						{
+							if (skipSystemStartBarLine)
+							{
+								if (cursor.segment && (cursor.segment.segmentType !== Segment.BeginBarLine))
+								{
+									onBarLine(cursor.element);
+								}
+							}
+							else
 							{
 								onBarLine(cursor.element);
 							}
 						}
-						else
-						{
-							onBarLine(cursor.element);
-						}
 					}
-				}
 
-				cursor.next();
+					cursor.next();
+				}
 			}
 		}
 	}
-
-	curScore.endCmd();
+	catch (error)
+	{
+		logger.err(error);
+		throw error;
+	}
+	finally
+	{
+		curScore.endCmd();
+	}
 }
