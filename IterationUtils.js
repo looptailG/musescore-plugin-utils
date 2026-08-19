@@ -16,7 +16,7 @@
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const VERSION = "1.2.0";
+const VERSION = "1.3.0";
 
 function iterate(curScore, actions, logger)
 {
@@ -38,6 +38,7 @@ function iterate(curScore, actions, logger)
 		let skipSystemStartBarLine = (actions.skipSystemStartBarLine !== undefined)
 			? actions.skipSystemStartBarLine : true;
 		let onLayoutBreak = actions.onLayoutBreak || null;
+		let onStaffEnd = actions.onStaffEnd || null;
 
 		curScore.startCmd();
 		let cursor = curScore.newCursor();
@@ -253,6 +254,11 @@ function iterate(curScore, actions, logger)
 					}
 
 					cursor.next();
+				}
+
+				if (onStaffEnd)
+				{
+					onStaffEnd();
 				}
 			}
 		}
