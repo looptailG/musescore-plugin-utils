@@ -16,29 +16,66 @@
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const VERSION = "1.3.0";
+const VERSION = "1.4.0";
 
-function iterate(curScore, actions, logger)
+/**
+ * Iterate on the current selection, or the entire score if nothing is selected,
+ * using iterationData as parameters.  Possible values are:
+ *
+ * - voicesFilter: If present, only the voices present in this array will be
+ *     iterated on.
+ * - forceWholeScore: If true, the entire score will be iterated on, regardless
+ *     of the current selection.  Default value is false.
+ * - onStaffStart: If present, this function will be called at the start of each
+ *     staff.
+ * - onNewMeasure: If present, this function will be called on each new measure.
+ * - onClef: If present, this function will be called on each clef change,
+ *     including the clef at the beginning of the score.
+ * - onKeySignature: If present, this function will be called on each key
+ *     signature change, including the key signature at the beginning of the
+ *     score.
+ * - onTimeSignature: If present, this function will be called on each time
+ *     signature change, including the time signature at the beginning of the
+ *     score.
+ * - onAnnotation: If present, this function will be called on each annotation.
+ * - staffTextOnCurrentStaffOnly: If true, staff text elements will cause
+ *     onAnnotation to be called only if the staff text is on the current staff.
+ *     Default value is true.
+ * - onChord: If present, this function will be called on each chord.
+ * - onNote: If present, this function will be called on each note, including
+ *     grace notes.
+ * - onRest: If present, this function will be called on each rest.
+ * - onBarLine: If present, this function will be called on each bar line.
+ * - skipSystemStartBarLine: If true, onBarLine will not be called for the bar
+ *     line at the very beginning of each system, if present.  Default value is
+ *     true.
+ * - onLayoutBreak: If present, this function will be called on each layout
+ *     break.
+ * - onStaffEnd: If present, this function will be called at the end of each
+ *     staff.
+ */
+function iterate(curScore, iterationData, logger)
 {
 	try
 	{
-		let voicesFilter = actions.voicesFilter || null;
-		let onStaffStart = actions.onStaffStart || null;
-		let onNewMeasure = actions.onNewMeasure || null;
-		let onClef = actions.onClef || null;
-		let onKeySignature = actions.onKeySignature || null;
-		let onTimeSignature = actions.onTimeSignature || null;
-		let onAnnotation = actions.onAnnotation || null;
-		let staffTextOnCurrentStaffOnly = (actions.staffTextOnCurrentStaffOnly !== undefined)
-			? actions.staffTextOnCurrentStaffOnly : true;
-		let onChord = actions.onChord || null;
-		let onNote = actions.onNote || null;
-		let onRest = actions.onRest || null;
-		let onBarLine = actions.onBarLine || null;
-		let skipSystemStartBarLine = (actions.skipSystemStartBarLine !== undefined)
-			? actions.skipSystemStartBarLine : true;
-		let onLayoutBreak = actions.onLayoutBreak || null;
-		let onStaffEnd = actions.onStaffEnd || null;
+		let voicesFilter = iterationData.voicesFilter || null;
+		let forceWholeScore = (iterationData.forceWholeScore !== undefined) ? iterationData.forceWholeScore : false;
+		let onStaffStart = iterationData.onStaffStart || null;
+		let onNewMeasure = iterationData.onNewMeasure || null;
+		let onClef = iterationData.onClef || null;
+		let onKeySignature = iterationData.onKeySignature || null;
+		let onTimeSignature = iterationData.onTimeSignature || null;
+		let onAnnotation = iterationData.onAnnotation || null;
+		let staffTextOnCurrentStaffOnly = (iterationData.staffTextOnCurrentStaffOnly !== undefined)
+			? iterationData.staffTextOnCurrentStaffOnly : true;
+		let onChord = iterationData.onChord || null;
+		let onNote = iterationData.onNote || null;
+		let onRest = iterationData.onRest || null;
+		let onBarLine = iterationData.onBarLine || null;
+		let skipSystemStartBarLine = (iterationData.skipSystemStartBarLine !== undefined)
+			? iterationData.skipSystemStartBarLine : true;
+		let onLayoutBreak = iterationData.onLayoutBreak || null;
+		let onStaffEnd = iterationData.onStaffEnd || null;
 
 		curScore.startCmd();
 		let cursor = curScore.newCursor();
@@ -49,7 +86,9 @@ function iterate(curScore, actions, logger)
 		let startTick;
 		let endTick;
 		cursor.rewind(Cursor.SELECTION_START);
-		if (!cursor.segment)
+		// If cursor.segment is null, nothing is selected so we should iterate
+		// on the entire score.
+		if (forceWholeScore || !cursor.segment)
 		{
 			logger.log("Iterating on the entire score.");
 			startStaff = 0;
