@@ -18,6 +18,42 @@
 
 const VERSION = "1.4.0";
 
+/**
+ * Iterate on the current selection, or the entire score if nothing is selected,
+ * using iterationData as parameters.  Possible values are:
+ *
+ * - voicesFilter: If present, only the voices present in this array will be
+ *     iterated on.
+ * - forceWholeScore: If true, the entire score will be iterated on, regardless
+ *     of the current selection.  Default value is false.
+ * - onStaffStart: If present, this function will be called at the start of each
+ *     staff.
+ * - onNewMeasure: If present, this function will be called on each new measure.
+ * - onClef: If present, this function will be called on each clef change,
+ *     including the clef at the beginning of the score.
+ * - onKeySignature: If present, this function will be called on each key
+ *     signature change, including the key signature at the beginning of the
+ *     score.
+ * - onTimeSignature: If present, this function will be called on each time
+ *     signature change, including the time signature at the beginning of the
+ *     score.
+ * - onAnnotation: If present, this function will be called on each annotation.
+ * - staffTextOnCurrentStaffOnly: If true, staff text elements will cause
+ *     onAnnotation to be called only if the staff text is on the current staff.
+ *     Default value is true.
+ * - onChord: If present, this function will be called on each chord.
+ * - onNote: If present, this function will be called on each note, including
+ *     grace notes.
+ * - onRest: If present, this function will be called on each rest.
+ * - onBarLine: If present, this function will be called on each bar line.
+ * - skipSystemStartBarLine: If true, onBarLine will not be called for the bar
+ *     line at the very beginning of each system, if present.  Default value is
+ *     true.
+ * - onLayoutBreak: If present, this function will be called on each layout
+ *     break.
+ * - onStaffEnd: If present, this function will be called at the end of each
+ *     staff.
+ */
 function iterate(curScore, iterationData, logger)
 {
 	try
@@ -50,6 +86,8 @@ function iterate(curScore, iterationData, logger)
 		let startTick;
 		let endTick;
 		cursor.rewind(Cursor.SELECTION_START);
+		// If cursor.segment is null, nothing is selected so we should iterate
+		// on the entire score.
 		if (forceWholeScore || !cursor.segment)
 		{
 			logger.log("Iterating on the entire score.");
