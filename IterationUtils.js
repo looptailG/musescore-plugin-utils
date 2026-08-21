@@ -16,29 +16,30 @@
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const VERSION = "1.3.0";
+const VERSION = "1.4.0";
 
-function iterate(curScore, actions, logger)
+function iterate(curScore, iterationData, logger)
 {
 	try
 	{
-		let voicesFilter = actions.voicesFilter || null;
-		let onStaffStart = actions.onStaffStart || null;
-		let onNewMeasure = actions.onNewMeasure || null;
-		let onClef = actions.onClef || null;
-		let onKeySignature = actions.onKeySignature || null;
-		let onTimeSignature = actions.onTimeSignature || null;
-		let onAnnotation = actions.onAnnotation || null;
-		let staffTextOnCurrentStaffOnly = (actions.staffTextOnCurrentStaffOnly !== undefined)
-			? actions.staffTextOnCurrentStaffOnly : true;
-		let onChord = actions.onChord || null;
-		let onNote = actions.onNote || null;
-		let onRest = actions.onRest || null;
-		let onBarLine = actions.onBarLine || null;
-		let skipSystemStartBarLine = (actions.skipSystemStartBarLine !== undefined)
-			? actions.skipSystemStartBarLine : true;
-		let onLayoutBreak = actions.onLayoutBreak || null;
-		let onStaffEnd = actions.onStaffEnd || null;
+		let voicesFilter = iterationData.voicesFilter || null;
+		let forceWholeScore = (iterationData.forceWholeScore !== undefined) ? iterationData.forceWholeScore : false;
+		let onStaffStart = iterationData.onStaffStart || null;
+		let onNewMeasure = iterationData.onNewMeasure || null;
+		let onClef = iterationData.onClef || null;
+		let onKeySignature = iterationData.onKeySignature || null;
+		let onTimeSignature = iterationData.onTimeSignature || null;
+		let onAnnotation = iterationData.onAnnotation || null;
+		let staffTextOnCurrentStaffOnly = (iterationData.staffTextOnCurrentStaffOnly !== undefined)
+			? iterationData.staffTextOnCurrentStaffOnly : true;
+		let onChord = iterationData.onChord || null;
+		let onNote = iterationData.onNote || null;
+		let onRest = iterationData.onRest || null;
+		let onBarLine = iterationData.onBarLine || null;
+		let skipSystemStartBarLine = (iterationData.skipSystemStartBarLine !== undefined)
+			? iterationData.skipSystemStartBarLine : true;
+		let onLayoutBreak = iterationData.onLayoutBreak || null;
+		let onStaffEnd = iterationData.onStaffEnd || null;
 
 		curScore.startCmd();
 		let cursor = curScore.newCursor();
@@ -49,7 +50,7 @@ function iterate(curScore, actions, logger)
 		let startTick;
 		let endTick;
 		cursor.rewind(Cursor.SELECTION_START);
-		if (!cursor.segment)
+		if (forceWholeScore || !cursor.segment)
 		{
 			logger.log("Iterating on the entire score.");
 			startStaff = 0;
